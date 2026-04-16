@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Github, LayoutDashboard, FolderKanban, Settings, LogOut, Plus, Trash2, BarChart3, Users, Eye, UploadCloud, Image as ImageIcon, X, MessageSquare, Award, Code, Briefcase, MonitorSmartphone, Server, PenTool, GraduationCap, Globe, ExternalLink } from 'lucide-react';
+import { Github, LayoutDashboard, FolderKanban, Settings, LogOut, Plus, Trash2, BarChart3, Users, Eye, UploadCloud, Upload, Image as ImageIcon, X, MessageSquare, Award, Code, Briefcase, MonitorSmartphone, Server, PenTool, GraduationCap, Globe, ExternalLink } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { auth, db, isFirebaseConfigured } from '../lib/firebase';
 import { collection, addDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, updateDoc } from 'firebase/firestore';
@@ -205,7 +205,7 @@ const Dashboard = () => {
           ) : stats.length === 0 ? (
             <div className="w-full h-full flex items-center justify-center text-gray-400">Hali ma'lumot yo'q</div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minHeight={300}>
               <AreaChart data={stats} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
