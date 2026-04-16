@@ -94,8 +94,7 @@ export const translations = {
     testimonials: {
       title: "Mijozlar Fikri",
       subtitle: "Men bilan ishlagan insonlar nima deydi?",
-      items: 
-        
+      items: []
     },
     footer: {
       rights: "Barcha huquqlar himoyalangan."
