@@ -90,12 +90,20 @@ export const translations = {
       step3: { title: "Dasturlash", desc: "Tasdiqlangan dizayn asosida frontend va backend qismlarini kodlash, ma'lumotlar bazasini ulash." },
       step4: { title: "Testlash va Ishga tushirish", desc: "Barcha funksiyalarni tekshirish, xatoliklarni to'g'rilash va loyihani ommaga taqdim etish." }
     },
-    
     testimonials: {
       title: "Mijozlar Fikri",
       subtitle: "Men bilan ishlagan insonlar nima deydi?",
-      items: []
+      items: [
+        { name: "Mebel Do`koni", role: "mebelmashhura.uz", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." },
+
+      ]
     },
+    statsCards: [
+      { text: "Tugallangan Loyihalar", value: "5+" },
+      { text: "Xursand Mijozlar", value: "3+" },
+      { text: "Qator Kod", value: "100k+" },
+      { text: "Chashka Qahva", value: "500+" }
+    ],
     footer: {
       rights: "Barcha huquqlar himoyalangan."
     }
@@ -194,9 +202,15 @@ export const translations = {
       title: "Отзывы клиентов",
       subtitle: "Что говорят люди, с которыми я работал?",
       items: [
-     
+         { name: "Mebel Do`koni", role: "mebelmashhura.uz", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." },
       ]
     },
+    statsCards: [
+      { text: "Завершенные проекты", value: "3+" },
+      { text: "Счастливые клиенты", value: "3+" },
+      { text: "Строк кода", value: "100k+" },
+      { text: "Чашек кофе", value: "500+" }
+    ],
     footer: {
       rights: "Все права защищены."
     }
@@ -295,9 +309,15 @@ export const translations = {
       title: "Testimonials",
       subtitle: "What people I've worked with say?",
       items: [
-      
-              ]
+         { name: "Mebel Do`koni", role: "mebelmashhura.uz", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." },
+      ]
     },
+    statsCards: [
+      { text: "Completed Projects", value: "3+" },
+      { text: "Happy Clients", value: "3+" },
+      { text: "Lines of Code", value: "100k+" },
+      { text: "Cups of Coffee", value: "500+" }
+    ],
     footer: {
       rights: "All rights reserved."
     }

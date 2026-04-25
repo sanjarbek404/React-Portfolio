@@ -74,11 +74,22 @@ body {
     opacity: 0.05;
   }
   .outline-text-subtle {
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.8);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
     color: transparent;
   }
   .dark .outline-text-subtle {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.8);
     color: transparent;
+  }
+}
+
+@media print {
+  @page {
+    margin: 0;
+    size: A4;
+  }
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

@@ -1060,6 +1060,20 @@ const CertificatesManager = () => {
     setIsAdding(true);
   };
 
+  const uploadImageToImgBB = async (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY || '6d2abda26cb682c3f851da8181ad3ea2'}`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.success) {
+      return data.data.url;
+    }
+    throw new Error('Rasm yuklashda xatolik');
+  };
+
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -1395,8 +1409,8 @@ const SettingsManager = () => {
     aboutTitle: 'Sodda. Kreativ. Samarali.', 
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
-    expYears: '3+', 
-    githubCommits: '1.2k', 
+    expYears: '1+', 
+    githubCommits: '150+', 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
@@ -1594,7 +1608,7 @@ const SettingsManager = () => {
             </div>
             <div>
               <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Tajriba yillari</label>
-              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="3+" />
+              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="1+" />
             </div>
           </form>
 
@@ -1758,6 +1772,73 @@ const MessagesManager = () => {
   );
 };
 
+const TranslationsManager = () => {
+  const [data, setData] = useState<string>('{}');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !db) return;
+    const fetchTranslations = async () => {
+      try {
+        const docRef = doc(db, 'settings', 'translations');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().data) {
+          setData(typeof docSnap.data().data === 'string' ? docSnap.data().data : JSON.stringify(docSnap.data().data, null, 2));
+        } else {
+          // Provide a helpful template if it's empty
+          setData('{\n  "UZ": {\n    "statsCards": [\n      { "text": "Tugallangan Loyihalar", "value": "50+" },\n      { "text": "Xursand Mijozlar", "value": "30+" },\n      { "text": "Qator Kod", "value": "100k+" },\n      { "text": "Chashka Qahva", "value": "500+" }\n    ]\n  }\n}');
+        }
+      } catch (error) {}
+    };
+    fetchTranslations();
+  }, []);
+
+  const handleSave = async () => {
+    if (!isFirebaseConfigured || !db) return;
+    setSaving(true);
+    try {
+      // Validate JSON
+      JSON.parse(data);
+      await setDoc(doc(db, 'settings', 'translations'), { data, updatedAt: new Date().toISOString() });
+      toast.success("Matnlar saqlandi");
+    } catch (error: any) {
+      toast.error("JSON noto'g'ri formatda: " + error.message);
+    }
+    setSaving(false);
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-8"
+    >
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Sayt Matnlari (JSON)</h2>
+          <p className="text-gray-500 mt-2 font-medium">Barcha tillardagi sayt matnlarini (jumladan Statistikalar) JSON shaklida tahrirlang.</p>
+        </div>
+        <button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 min-w-[150px] text-white px-6 py-3 rounded-full font-bold transition-all shadow-lg flex items-center justify-center">
+          {saving ? 'Saqlanmoqda...' : 'Saqlash'}
+        </button>
+      </div>
+
+      <div className="bg-white dark:bg-[#1d1d1f] rounded-[2rem] border border-gray-100 dark:border-white/10 p-6">
+        <p className="text-sm text-yellow-600 dark:text-yellow-400 mb-4 bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl">
+          Eslatma: Mavjud JSON kalitlarini o'zgartirmang, faqat qiymatlarini (matnlarni) tahrirlang. Masalan, UZ.nav.about o'rniga boshqa so'z yozishingiz mumkin.
+        </p>
+        <textarea
+          value={data}
+          onChange={(e) => setData(e.target.value)}
+          rows={25}
+          className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-6 font-mono text-sm text-[#1d1d1f] dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          placeholder='Masalan:&#10;{&#10;  "UZ": { "sayt_sarlavha": "Mening saytim" }&#10;}'
+        />
+      </div>
+    </motion.div>
+  );
+};
+
 export default function Admin() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -1768,7 +1849,7 @@ export default function Admin() {
       return;
     }
     
-    const unsubscribe = auth?.onAuthStateChanged((user) => {
+    const unsubscribe = auth?.onAuthStateChanged((user: any) => {
       if (!user) {
         navigate('/login');
       }
@@ -1793,6 +1874,7 @@ export default function Admin() {
     { path: '/admin/skills', icon: <Code size={20} />, label: "Ko'nikmalar" },
     { path: '/admin/certs', icon: <Award size={20} />, label: 'Sertifikatlar' },
     { path: '/admin/messages', icon: <MessageSquare size={20} />, label: 'Xabarlar' },
+    { path: '/admin/translations', icon: <PenTool size={20} />, label: 'Matnlar' },
     { path: '/admin/settings', icon: <Settings size={20} />, label: 'Sozlamalar' },
   ];
 
@@ -1866,6 +1948,7 @@ export default function Admin() {
               <Route path="/skills" element={<SkillsManager />} />
               <Route path="/certs" element={<CertificatesManager />} />
               <Route path="/messages" element={<MessagesManager />} />
+              <Route path="/translations" element={<TranslationsManager />} />
               <Route path="/settings" element={<SettingsManager />} />
             </Routes>
           </AnimatePresence>

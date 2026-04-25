@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import html2pdf from 'html2pdf.js';
 import { ArrowLeft, Download, Plus, Trash2, Image as ImageIcon, Mail, Phone, MapPin, Globe, LayoutTemplate, CheckCircle2, ZoomIn, ZoomOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -51,7 +51,7 @@ type TemplateType = 'modern' | 'classic' | 'minimal';
 
 export default function CVBuilder() {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType | null>(null);
-  const [data, setData] = useState({
+  const [data, setData] = useState<any>({
     name: '',
     title: '',
     email: '',
@@ -68,10 +68,36 @@ export default function CVBuilder() {
   const [zoom, setZoom] = useState(0.8);
   const printRef = useRef<HTMLDivElement>(null);
 
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: `${data.name}_CV`,
-  });
+  const handlePrint = () => {
+    if (!printRef.current) return;
+    
+    // Create options for html2pdf
+    const opt: any = {
+      margin:       0,
+      filename:     `${data.name || 'document'}_CV.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, logging: false },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    
+    // Since we apply scaling via CSS zoom for preview, we need to temporarily
+    // reset it for the PDF generation, otherwise PDF will be zoomed out
+    const element = printRef.current;
+    const parentContainer = element.parentElement;
+    let originalTransform = '';
+    
+    if (parentContainer) {
+      originalTransform = parentContainer.style.transform;
+      parentContainer.style.transform = 'scale(1)';
+    }
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      // Restore transform
+      if (parentContainer) {
+        parentContainer.style.transform = originalTransform;
+      }
+    });
+  };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -94,14 +120,14 @@ export default function CVBuilder() {
   const updateExperience = (id: number, field: string, value: string) => {
     setData({
       ...data,
-      experience: data.experience.map(exp => exp.id === id ? { ...exp, [field]: value } : exp)
+      experience: data.experience.map((exp: any) => exp.id === id ? { ...exp, [field]: value } : exp)
     });
   };
 
   const removeExperience = (id: number) => {
     setData({
       ...data,
-      experience: data.experience.filter(exp => exp.id !== id)
+      experience: data.experience.filter((exp: any) => exp.id !== id)
     });
   };
 
@@ -115,14 +141,14 @@ export default function CVBuilder() {
   const updateEducation = (id: number, field: string, value: string) => {
     setData({
       ...data,
-      education: data.education.map(edu => edu.id === id ? { ...edu, [field]: value } : edu)
+      education: data.education.map((edu: any) => edu.id === id ? { ...edu, [field]: value } : edu)
     });
   };
 
   const removeEducation = (id: number) => {
     setData({
       ...data,
-      education: data.education.filter(edu => edu.id !== id)
+      education: data.education.filter((edu: any) => edu.id !== id)
     });
   };
 
@@ -286,7 +312,7 @@ export default function CVBuilder() {
               </div>
               <div className="space-y-4">
                 <AnimatePresence>
-                  {data.experience.map((exp) => (
+                  {data.experience.map((exp: any) => (
                     <motion.div 
                       key={exp.id} 
                       initial={{ opacity: 0, height: 0 }}
@@ -339,7 +365,7 @@ export default function CVBuilder() {
               </div>
               <div className="space-y-4">
                 <AnimatePresence>
-                  {data.education.map((edu) => (
+                  {data.education.map((edu: any) => (
                     <motion.div 
                       key={edu.id}
                       initial={{ opacity: 0, height: 0 }}
@@ -406,7 +432,7 @@ export default function CVBuilder() {
             <div className="origin-top" style={{ transform: `scale(${zoom})`, transition: 'transform 0.2s ease-out' }}>
               <div 
                 ref={printRef}
-                className="bg-white text-black w-[210mm] min-h-[297mm] shadow-2xl shrink-0 print:shadow-none print:m-0"
+                className="bg-white text-black w-[210mm] h-[297mm] overflow-hidden shadow-2xl shrink-0 print:shadow-none print:m-0"
               >
                 {selectedTemplate === 'modern' && <ModernTemplate data={data} photo={photo} />}
                 {selectedTemplate === 'classic' && <ClassicTemplate data={data} photo={photo} />}
@@ -424,41 +450,41 @@ export default function CVBuilder() {
 // --- Templates ---
 
 const ModernTemplate = ({ data, photo }: { data: any, photo: string | null }) => (
-  <div className="flex min-h-[297mm] bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+  <div className="flex h-[297mm] bg-[#ffffff] overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
     {/* Left Sidebar */}
-    <div className="w-[35%] bg-[#1a1a1a] text-white p-8 flex flex-col">
+    <div className="w-[35%] bg-[#1a1a1a] text-[#ffffff] p-8 flex flex-col">
       {photo ? (
-        <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white/20 mb-8">
+        <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#ffffff]/20 mb-8">
           <img src={photo} alt="Profile" className="w-full h-full object-cover" />
         </div>
       ) : (
-        <div className="w-40 h-40 mx-auto rounded-full bg-white/10 border-4 border-white/20 mb-8 flex items-center justify-center">
-          <span className="text-white/50 text-sm">Rasm yo'q</span>
+        <div className="w-40 h-40 mx-auto rounded-full bg-[#ffffff]/10 border-4 border-[#ffffff]/20 mb-8 flex items-center justify-center">
+          <span className="text-[#ffffff]/50 text-sm">Rasm yo'q</span>
         </div>
       )}
 
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-black tracking-tight mb-2 leading-tight">{data.name || 'Ism Familiya'}</h1>
-        <h2 className="text-blue-400 font-medium tracking-widest uppercase text-sm">{data.title || 'Mutaxassislik'}</h2>
+        <h2 className="text-[#60a5fa] font-medium tracking-widest uppercase text-sm">{data.title || 'Mutaxassislik'}</h2>
       </div>
 
       <div className="space-y-8 flex-1">
         <section>
-          <h3 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Aloqa</h3>
-          <div className="space-y-4 text-sm text-white/90">
-            {data.email && <div className="flex items-center gap-3"><Mail size={16} className="text-blue-400 shrink-0" /> <span className="break-all">{data.email}</span></div>}
-            {data.phone && <div className="flex items-center gap-3"><Phone size={16} className="text-blue-400 shrink-0" /> <span>{data.phone}</span></div>}
-            {data.address && <div className="flex items-center gap-3"><MapPin size={16} className="text-blue-400 shrink-0" /> <span>{data.address}</span></div>}
-            {data.website && <div className="flex items-center gap-3"><Globe size={16} className="text-blue-400 shrink-0" /> <span>{data.website}</span></div>}
+          <h3 className="text-xs font-bold text-[#ffffff]/50 uppercase tracking-widest mb-4 border-b border-[#ffffff]/10 pb-2">Aloqa</h3>
+          <div className="space-y-4 text-sm text-[#ffffff]/90">
+            {data.email && <div className="flex items-center gap-3"><Mail size={16} className="text-[#60a5fa] shrink-0" /> <span className="break-all">{data.email}</span></div>}
+            {data.phone && <div className="flex items-center gap-3"><Phone size={16} className="text-[#60a5fa] shrink-0" /> <span>{data.phone}</span></div>}
+            {data.address && <div className="flex items-center gap-3"><MapPin size={16} className="text-[#60a5fa] shrink-0" /> <span>{data.address}</span></div>}
+            {data.website && <div className="flex items-center gap-3"><Globe size={16} className="text-[#60a5fa] shrink-0" /> <span>{data.website}</span></div>}
           </div>
         </section>
 
         {data.skills && (
           <section>
-            <h3 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Ko'nikmalar</h3>
+            <h3 className="text-xs font-bold text-[#ffffff]/50 uppercase tracking-widest mb-4 border-b border-[#ffffff]/10 pb-2">Ko'nikmalar</h3>
             <div className="flex flex-wrap gap-2">
               {data.skills.split(',').map((skill: string, i: number) => (
-                <span key={i} className="bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-full">
+                <span key={i} className="bg-[#ffffff]/10 text-[#ffffff] text-xs font-medium px-3 py-1.5 rounded-full">
                   {skill.trim()}
                 </span>
               ))}
@@ -474,34 +500,34 @@ const ModernTemplate = ({ data, photo }: { data: any, photo: string | null }) =>
         {data.summary && (
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+              <div className="w-8 h-8 rounded-full bg-[#dbeafe] flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-[#2563eb]"></div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 uppercase tracking-wider">Profil</h3>
+              <h3 className="text-xl font-bold text-[#111827] uppercase tracking-wider">Profil</h3>
             </div>
-            <p className="text-sm text-gray-600 leading-relaxed pl-11">{data.summary}</p>
+            <p className="text-sm text-[#4b5563] leading-relaxed pl-11">{data.summary}</p>
           </section>
         )}
 
         {data.experience.length > 0 && (
           <section>
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+              <div className="w-8 h-8 rounded-full bg-[#dbeafe] flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-[#2563eb]"></div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 uppercase tracking-wider">Tajriba</h3>
+              <h3 className="text-xl font-bold text-[#111827] uppercase tracking-wider">Tajriba</h3>
             </div>
             <div className="space-y-6 pl-11">
               {data.experience.map((exp: any) => (
                 <div key={exp.id} className="relative">
-                  <div className="absolute -left-[27px] top-1.5 w-3 h-3 rounded-full bg-gray-300 border-2 border-white"></div>
-                  <div className="absolute -left-[22px] top-4 bottom-[-24px] w-0.5 bg-gray-200 last:hidden"></div>
+                  <div className="absolute -left-[27px] top-1.5 w-3 h-3 rounded-full bg-[#d1d5db] border-2 border-white"></div>
+                  <div className="absolute -left-[22px] top-4 bottom-[-24px] w-0.5 bg-[#e5e7eb] last:hidden"></div>
                   <div className="flex justify-between items-baseline mb-1">
-                    <h4 className="font-bold text-gray-900 text-lg">{exp.role}</h4>
-                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{exp.year}</span>
+                    <h4 className="font-bold text-[#111827] text-lg">{exp.role}</h4>
+                    <span className="text-xs font-bold text-[#2563eb] bg-[#eff6ff] px-3 py-1 rounded-full">{exp.year}</span>
                   </div>
-                  <div className="text-sm font-semibold text-gray-500 mb-2">{exp.company}</div>
-                  <p className="text-sm text-gray-600 leading-relaxed">{exp.desc}</p>
+                  <div className="text-sm font-semibold text-[#6b7280] mb-2">{exp.company}</div>
+                  <p className="text-sm text-[#4b5563] leading-relaxed">{exp.desc}</p>
                 </div>
               ))}
             </div>
@@ -511,22 +537,22 @@ const ModernTemplate = ({ data, photo }: { data: any, photo: string | null }) =>
         {data.education.length > 0 && (
           <section>
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+              <div className="w-8 h-8 rounded-full bg-[#dbeafe] flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-[#2563eb]"></div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 uppercase tracking-wider">Ta'lim</h3>
+              <h3 className="text-xl font-bold text-[#111827] uppercase tracking-wider">Ta'lim</h3>
             </div>
             <div className="space-y-6 pl-11">
               {data.education.map((edu: any) => (
                 <div key={edu.id} className="relative">
-                  <div className="absolute -left-[27px] top-1.5 w-3 h-3 rounded-full bg-gray-300 border-2 border-white"></div>
-                  <div className="absolute -left-[22px] top-4 bottom-[-24px] w-0.5 bg-gray-200 last:hidden"></div>
+                  <div className="absolute -left-[27px] top-1.5 w-3 h-3 rounded-full bg-[#d1d5db] border-2 border-white"></div>
+                  <div className="absolute -left-[22px] top-4 bottom-[-24px] w-0.5 bg-[#e5e7eb] last:hidden"></div>
                   <div className="flex justify-between items-baseline mb-1">
-                    <h4 className="font-bold text-gray-900 text-lg">{edu.degree}</h4>
-                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{edu.year}</span>
+                    <h4 className="font-bold text-[#111827] text-lg">{edu.degree}</h4>
+                    <span className="text-xs font-bold text-[#2563eb] bg-[#eff6ff] px-3 py-1 rounded-full">{edu.year}</span>
                   </div>
-                  <div className="text-sm font-semibold text-gray-500 mb-2">{edu.school}</div>
-                  <p className="text-sm text-gray-600 leading-relaxed">{edu.desc}</p>
+                  <div className="text-sm font-semibold text-[#6b7280] mb-2">{edu.school}</div>
+                  <p className="text-sm text-[#4b5563] leading-relaxed">{edu.desc}</p>
                 </div>
               ))}
             </div>
@@ -538,14 +564,14 @@ const ModernTemplate = ({ data, photo }: { data: any, photo: string | null }) =>
 );
 
 const ClassicTemplate = ({ data, photo }: { data: any, photo: string | null }) => (
-  <div className="p-12 bg-white min-h-[297mm]" style={{ fontFamily: "'Georgia', serif" }}>
-    <div className="text-center mb-12 border-b-2 border-gray-900 pb-10">
+  <div className="p-12 bg-[#ffffff] h-[297mm] overflow-hidden" style={{ fontFamily: "'Georgia', serif" }}>
+    <div className="text-center mb-12 border-b-2 border-[#111827] pb-10">
       {photo && (
-        <img src={photo} alt="Profile" className="w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4 border-gray-100 shadow-sm" />
+        <img src={photo} alt="Profile" className="w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4 border-[#f3f4f6] shadow-sm" />
       )}
-      <h1 className="text-5xl font-bold text-gray-900 uppercase tracking-widest mb-3">{data.name || 'Ism Familiya'}</h1>
-      <h2 className="text-2xl italic text-gray-600 mb-6">{data.title || 'Mutaxassislik'}</h2>
-      <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600 font-sans">
+      <h1 className="text-5xl font-bold text-[#111827] uppercase tracking-widest mb-3">{data.name || 'Ism Familiya'}</h1>
+      <h2 className="text-2xl italic text-[#4b5563] mb-6">{data.title || 'Mutaxassislik'}</h2>
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-[#4b5563] font-sans">
         {data.email && <span className="flex items-center gap-1"><Mail size={14}/> {data.email}</span>}
         {data.phone && <span className="flex items-center gap-1"><Phone size={14}/> {data.phone}</span>}
         {data.address && <span className="flex items-center gap-1"><MapPin size={14}/> {data.address}</span>}
@@ -556,23 +582,23 @@ const ClassicTemplate = ({ data, photo }: { data: any, photo: string | null }) =
     <div className="space-y-10 px-8">
       {data.summary && (
         <section>
-          <h3 className="text-xl font-bold text-gray-900 uppercase tracking-widest border-b border-gray-300 pb-2 mb-4 text-center">Profil</h3>
-          <p className="text-base text-gray-800 leading-relaxed text-justify">{data.summary}</p>
+          <h3 className="text-xl font-bold text-[#111827] uppercase tracking-widest border-b border-[#d1d5db] pb-2 mb-4 text-center">Profil</h3>
+          <p className="text-base text-[#1f2937] leading-relaxed text-justify">{data.summary}</p>
         </section>
       )}
 
       {data.experience.length > 0 && (
         <section>
-          <h3 className="text-xl font-bold text-gray-900 uppercase tracking-widest border-b border-gray-300 pb-2 mb-6 text-center">Tajriba</h3>
+          <h3 className="text-xl font-bold text-[#111827] uppercase tracking-widest border-b border-[#d1d5db] pb-2 mb-6 text-center">Tajriba</h3>
           <div className="space-y-8">
             {data.experience.map((exp: any) => (
               <div key={exp.id}>
                 <div className="flex justify-between items-end mb-1">
-                  <h4 className="font-bold text-gray-900 text-lg">{exp.role}</h4>
-                  <span className="text-sm font-sans text-gray-500 font-medium">{exp.year}</span>
+                  <h4 className="font-bold text-[#111827] text-lg">{exp.role}</h4>
+                  <span className="text-sm font-sans text-[#6b7280] font-medium">{exp.year}</span>
                 </div>
-                <div className="text-base italic text-gray-700 mb-2">{exp.company}</div>
-                <p className="text-sm text-gray-800 leading-relaxed">{exp.desc}</p>
+                <div className="text-base italic text-[#374151] mb-2">{exp.company}</div>
+                <p className="text-sm text-[#1f2937] leading-relaxed">{exp.desc}</p>
               </div>
             ))}
           </div>
@@ -581,16 +607,16 @@ const ClassicTemplate = ({ data, photo }: { data: any, photo: string | null }) =
 
       {data.education.length > 0 && (
         <section>
-          <h3 className="text-xl font-bold text-gray-900 uppercase tracking-widest border-b border-gray-300 pb-2 mb-6 text-center">Ta'lim</h3>
+          <h3 className="text-xl font-bold text-[#111827] uppercase tracking-widest border-b border-[#d1d5db] pb-2 mb-6 text-center">Ta'lim</h3>
           <div className="space-y-8">
             {data.education.map((edu: any) => (
               <div key={edu.id}>
                 <div className="flex justify-between items-end mb-1">
-                  <h4 className="font-bold text-gray-900 text-lg">{edu.degree}</h4>
-                  <span className="text-sm font-sans text-gray-500 font-medium">{edu.year}</span>
+                  <h4 className="font-bold text-[#111827] text-lg">{edu.degree}</h4>
+                  <span className="text-sm font-sans text-[#6b7280] font-medium">{edu.year}</span>
                 </div>
-                <div className="text-base italic text-gray-700 mb-2">{edu.school}</div>
-                <p className="text-sm text-gray-800 leading-relaxed">{edu.desc}</p>
+                <div className="text-base italic text-[#374151] mb-2">{edu.school}</div>
+                <p className="text-sm text-[#1f2937] leading-relaxed">{edu.desc}</p>
               </div>
             ))}
           </div>
@@ -599,8 +625,8 @@ const ClassicTemplate = ({ data, photo }: { data: any, photo: string | null }) =
 
       {data.skills && (
         <section>
-          <h3 className="text-xl font-bold text-gray-900 uppercase tracking-widest border-b border-gray-300 pb-2 mb-4 text-center">Ko'nikmalar</h3>
-          <p className="text-base text-gray-800 text-center leading-relaxed font-sans">
+          <h3 className="text-xl font-bold text-[#111827] uppercase tracking-widest border-b border-[#d1d5db] pb-2 mb-4 text-center">Ko'nikmalar</h3>
+          <p className="text-base text-[#1f2937] text-center leading-relaxed font-sans">
             {data.skills.split(',').map((s: string) => s.trim()).join(' • ')}
           </p>
         </section>
@@ -610,17 +636,17 @@ const ClassicTemplate = ({ data, photo }: { data: any, photo: string | null }) =
 );
 
 const MinimalTemplate = ({ data, photo }: { data: any, photo: string | null }) => (
-  <div className="p-14 flex bg-white min-h-[297mm]" style={{ fontFamily: "'Inter', sans-serif" }}>
+  <div className="p-14 flex bg-[#ffffff] h-[297mm] overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
     {/* Left Sidebar */}
-    <div className="w-1/3 pr-10 border-r border-gray-200">
+    <div className="w-1/3 pr-10 border-r border-[#e5e7eb]">
       {photo && (
         <img src={photo} alt="Profile" className="w-full aspect-square object-cover mb-10 grayscale rounded-2xl" />
       )}
       
       <div className="space-y-10">
         <section>
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Aloqa</h3>
-          <div className="space-y-3 text-sm text-gray-700">
+          <h3 className="text-xs font-bold text-[#9ca3af] uppercase tracking-widest mb-4">Aloqa</h3>
+          <div className="space-y-3 text-sm text-[#374151]">
             {data.email && <div className="break-all">{data.email}</div>}
             {data.phone && <div>{data.phone}</div>}
             {data.address && <div>{data.address}</div>}
@@ -630,11 +656,11 @@ const MinimalTemplate = ({ data, photo }: { data: any, photo: string | null }) =
 
         {data.skills && (
           <section>
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Ko'nikmalar</h3>
-            <div className="space-y-2 text-sm text-gray-700">
+            <h3 className="text-xs font-bold text-[#9ca3af] uppercase tracking-widest mb-4">Ko'nikmalar</h3>
+            <div className="space-y-2 text-sm text-[#374151]">
               {data.skills.split(',').map((skill: string, i: number) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                  <div className="w-1 h-1 bg-[#9ca3af] rounded-full"></div>
                   {skill.trim()}
                 </div>
               ))}
@@ -647,28 +673,28 @@ const MinimalTemplate = ({ data, photo }: { data: any, photo: string | null }) =
     {/* Right Content */}
     <div className="w-2/3 pl-10">
       <div className="mb-16">
-        <h1 className="text-6xl font-light text-gray-900 tracking-tighter mb-4 leading-none">{data.name || 'Ism Familiya'}</h1>
-        <h2 className="text-2xl text-gray-400 font-medium tracking-wide">{data.title || 'Mutaxassislik'}</h2>
+        <h1 className="text-6xl font-light text-[#111827] tracking-tighter mb-4 leading-none">{data.name || 'Ism Familiya'}</h1>
+        <h2 className="text-2xl text-[#9ca3af] font-medium tracking-wide">{data.title || 'Mutaxassislik'}</h2>
       </div>
 
       <div className="space-y-12">
         {data.summary && (
           <section>
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-5">Profil</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">{data.summary}</p>
+            <h3 className="text-xs font-bold text-[#9ca3af] uppercase tracking-widest mb-5">Profil</h3>
+            <p className="text-sm text-[#4b5563] leading-relaxed">{data.summary}</p>
           </section>
         )}
 
         {data.experience.length > 0 && (
           <section>
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Tajriba</h3>
+            <h3 className="text-xs font-bold text-[#9ca3af] uppercase tracking-widest mb-6">Tajriba</h3>
             <div className="space-y-8">
               {data.experience.map((exp: any) => (
                 <div key={exp.id} className="group">
-                  <div className="text-xs font-medium text-gray-400 mb-1">{exp.year}</div>
-                  <h4 className="font-bold text-gray-900 text-base mb-0.5">{exp.role}</h4>
-                  <div className="text-sm text-gray-500 mb-3">{exp.company}</div>
-                  <p className="text-sm text-gray-600 leading-relaxed">{exp.desc}</p>
+                  <div className="text-xs font-medium text-[#9ca3af] mb-1">{exp.year}</div>
+                  <h4 className="font-bold text-[#111827] text-base mb-0.5">{exp.role}</h4>
+                  <div className="text-sm text-[#6b7280] mb-3">{exp.company}</div>
+                  <p className="text-sm text-[#4b5563] leading-relaxed">{exp.desc}</p>
                 </div>
               ))}
             </div>
@@ -677,14 +703,14 @@ const MinimalTemplate = ({ data, photo }: { data: any, photo: string | null }) =
 
         {data.education.length > 0 && (
           <section>
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Ta'lim</h3>
+            <h3 className="text-xs font-bold text-[#9ca3af] uppercase tracking-widest mb-6">Ta'lim</h3>
             <div className="space-y-8">
               {data.education.map((edu: any) => (
                 <div key={edu.id}>
-                  <div className="text-xs font-medium text-gray-400 mb-1">{edu.year}</div>
-                  <h4 className="font-bold text-gray-900 text-base mb-0.5">{edu.degree}</h4>
-                  <div className="text-sm text-gray-500 mb-3">{edu.school}</div>
-                  <p className="text-sm text-gray-600 leading-relaxed">{edu.desc}</p>
+                  <div className="text-xs font-medium text-[#9ca3af] mb-1">{edu.year}</div>
+                  <h4 className="font-bold text-[#111827] text-base mb-0.5">{edu.degree}</h4>
+                  <div className="text-sm text-[#6b7280] mb-3">{edu.school}</div>
+                  <p className="text-sm text-[#4b5563] leading-relaxed">{edu.desc}</p>
                 </div>
               ))}
             </div>

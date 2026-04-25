@@ -7,8 +7,37 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../lib/LanguageContext';
 
-const Magnetic = ({ children, className = "" }: { children: React.ReactNode, strength?: number, className?: string }) => {
-  return <div className={className}>{children}</div>;
+import { FAQSection } from '../components/FAQSection';
+import { StatsSection } from '../components/StatsSection';
+
+const Magnetic = ({ children, className = "", strength = 0.5 }: { children: React.ReactNode, strength?: number, className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current!.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * strength, y: middleY * strength });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 const StaggerContainer = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
@@ -62,6 +91,41 @@ const WordReveal = ({ text, className = "" }: { text: string, className?: string
   );
 };
 
+const HoverGlow = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <div
+      className={`group relative ${className}`}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100 z-0"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              450px circle at ${mouseX}px ${mouseY}px,
+              rgba(59, 130, 246, 0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      <div className="relative z-10 w-full h-full">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+
 const ScrollProgress = () => {
   const { scrollYProgress } = useScroll();
   return (
@@ -102,62 +166,7 @@ const Typewriter = ({ text, delay = 0, className = "" }: { text: string, delay?:
   );
 };
 
-const ReactionsWidget = () => {
-  const [reactions, setReactions] = useState({ like: 0, heart: 0, fire: 0, rocket: 0 });
-  const [hasReacted, setHasReacted] = useState(false);
 
-  useEffect(() => {
-    if (!isFirebaseConfigured || !db) return;
-    const unsub = onSnapshot(doc(db, 'stats', 'reactions'), (docSnap) => {
-      if (docSnap.exists()) {
-        setReactions(docSnap.data() as any);
-      }
-    });
-    return () => unsub();
-  }, []);
-
-  const handleReact = async (type: string) => {
-    if (hasReacted || !isFirebaseConfigured || !db) return;
-    setHasReacted(true);
-    toast.success("Reaksiya uchun rahmat!");
-    try {
-      await setDoc(doc(db, 'stats', 'reactions'), {
-        [type]: increment(1)
-      }, { merge: true });
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'stats/reactions');
-      console.error(error);
-    }
-  };
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50, scale: 0.8 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay: 1, type: "spring" }}
-      className="fixed bottom-8 left-8 z-50 flex flex-col gap-2 bg-white/40 dark:bg-[#111]/40 backdrop-blur-md p-2 rounded-full border border-black/10 dark:border-white/10 shadow-2xl"
-    >
-      {[
-        { type: 'like', icon: <ThumbsUp size={18} />, count: reactions.like, color: "text-blue-500" },
-        { type: 'heart', icon: <Heart size={18} />, count: reactions.heart, color: "text-red-500" },
-        { type: 'fire', icon: <Flame size={18} />, count: reactions.fire, color: "text-cyan-500" },
-        { type: 'rocket', icon: <Rocket size={18} />, count: reactions.rocket, color: "text-purple-500" },
-      ].map((r) => (
-        <button
-          key={r.type}
-          onClick={() => handleReact(r.type)}
-          disabled={hasReacted}
-          className={`relative group flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${r.color}`}
-        >
-          <span className="group-hover:scale-125 transition-transform">{r.icon}</span>
-          <span className="absolute left-full ml-3 px-2 py-1 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] font-bold text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity shadow-lg whitespace-nowrap">
-            {r.count || 0}
-          </span>
-        </button>
-      ))}
-    </motion.div>
-  );
-};
 
 const BackgroundAnimation = () => {
   return (
@@ -231,18 +240,30 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
             </a>
           
           
-          <div className="hidden md:flex items-center space-x-6 text-sm font-medium text-[#86868b] dark:text-white/70">
-            <a href="#about" className="hover:text-[#1d1d1f] dark:hover:text-white transition-colors">{t.nav.about}</a>
-            <a href="#skills" className="hover:text-[#1d1d1f] dark:hover:text-white transition-colors">{t.nav.skills}</a>
-            <a href="#projects" className="hover:text-[#1d1d1f] dark:hover:text-white transition-colors">{t.nav.projects}</a>
-            <a href="#experience" className="hover:text-[#1d1d1f] dark:hover:text-white transition-colors">{t.nav.experience}</a>
-            <Link to="/cv-builder" className="hover:text-[#1d1d1f] dark:hover:text-white transition-colors flex items-center gap-1"><FileText size={14}/> {t.nav.cv}</Link>
+          <div className="hidden md:flex items-center p-1.5 space-x-1 bg-black/5 dark:bg-white/5 rounded-full">
+            <Magnetic strength={0.15}>
+              <a href="#about" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.about}</a>
+            </Magnetic>
+            <Magnetic strength={0.15}>
+              <a href="#skills" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.skills}</a>
+            </Magnetic>
+            <Magnetic strength={0.15}>
+              <a href="#projects" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.projects}</a>
+            </Magnetic>
+            <Magnetic strength={0.15}>
+              <a href="#experience" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.experience}</a>
+            </Magnetic>
+            <Magnetic strength={0.15}>
+              <Link to="/cv-builder" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium flex items-center justify-center gap-1.5 text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">
+                <FileText size={14}/> {t.nav.cv}
+              </Link>
+            </Magnetic>
           </div>
 
           <div className="flex items-center gap-3">
             
             <div className="relative group">
-              <button className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-3 py-1.5 rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5">
+              <button className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5">
                 <span className="text-lg">{lang === 'UZ' ? '🇺🇿' : lang === 'RU' ? '🇷🇺' : '🇺🇸'}</span>
                 <span className="text-xs font-black text-[#1d1d1f] dark:text-white uppercase hidden sm:inline">{lang}</span>
                 <ArrowRight size={12} className="rotate-90 text-gray-400" />
@@ -301,15 +322,44 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl pt-32 px-6 md:hidden"
           >
-            <div className="flex flex-col gap-8 text-center">
-              <a href="#about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-[#1d1d1f] dark:text-white">{t.nav.about}</a>
-              <a href="#skills" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-[#1d1d1f] dark:text-white">{t.nav.skills}</a>
-              <a href="#projects" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-[#1d1d1f] dark:text-white">{t.nav.projects}</a>
-              <a href="#experience" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-[#1d1d1f] dark:text-white">{t.nav.experience}</a>
-              <Link to="/cv-builder" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-[#1d1d1f] dark:text-white flex items-center justify-center gap-2"><FileText size={24}/> {t.nav.cv}</Link>
-              <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] px-8 py-4 rounded-full font-bold uppercase tracking-wider mx-auto shadow-lg">
-                {t.nav.contact}
-              </a>
+            <div className="flex flex-col gap-6 text-center">
+              {[
+                { href: "#about", label: t.nav.about },
+                { href: "#skills", label: t.nav.skills },
+                { href: "#projects", label: t.nav.projects },
+                { href: "#experience", label: t.nav.experience },
+              ].map((item, i) => (
+                <motion.a 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.1 }}
+                  href={item.href} 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white hover:text-blue-500 transition-colors"
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Link to="/cv-builder" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white hover:text-blue-500 transition-colors flex items-center justify-center gap-3">
+                  <FileText size={28} className="text-blue-500" /> {t.nav.cv}
+                </Link>
+              </motion.div>
+              <motion.a 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+                href="#contact" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className="mt-8 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] px-10 py-4 rounded-full font-bold uppercase tracking-wider mx-auto shadow-xl flex items-center gap-2"
+              >
+                {t.nav.contact} <ArrowRight size={18} />
+              </motion.a>
             </div>
           </motion.div>
         )}
@@ -365,7 +415,7 @@ const Hero = ({ settings }: { settings: any }) => {
   }, []);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText(settings?.email || 'hello@example.com');
+    navigator.clipboard.writeText(settings?.email || 'sanjarbekotabekov010@gmail.com');
     setCopied(true);
     toast.success("Email nusxalandi!");
     setTimeout(() => setCopied(false), 2000);
@@ -506,20 +556,35 @@ const Marquee = () => {
     "CREATIVE DEVELOPER", "UI/UX DESIGNER", "FRONTEND ENGINEER", "FULLSTACK ARCHITECT",
     "CREATIVE DEVELOPER", "UI/UX DESIGNER", "FRONTEND ENGINEER", "FULLSTACK ARCHITECT"
   ];
+  const { scrollY } = useScroll();
+  const xTransform = useTransform(scrollY, [0, 2000], [0, -1000]);
+  const xTransform2 = useTransform(scrollY, [0, 2000], [-1000, 0]);
 
   return (
-    <div className="py-6 bg-[#1d1d1f] dark:bg-white overflow-hidden flex whitespace-nowrap transform -rotate-2 scale-110 shadow-xl z-20 relative">
+    <div className="py-6 sm:py-10 bg-[#1d1d1f] dark:bg-white overflow-hidden flex flex-col gap-4 whitespace-nowrap transform -rotate-2 scale-110 shadow-2xl z-20 relative">
       <motion.div 
         className="flex gap-8 items-center px-4"
-        animate={{ x: [0, -1000] }}
-        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+        style={{ x: xTransform }}
       >
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-8">
-            <span className="text-3xl md:text-5xl font-display font-bold text-white dark:text-[#1d1d1f] tracking-tighter uppercase opacity-90">
+          <div key={`m1-${i}`} className="flex items-center gap-8 group">
+            <span className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 group-hover:opacity-100 group-hover:text-blue-500 transition-all duration-300">
               {item}
             </span>
-            <Star className="text-[#3B82F6] fill-[#3B82F6]" size={24} />
+            <Star className="text-[#3B82F6] fill-[#3B82F6]" size={32} />
+          </div>
+        ))}
+      </motion.div>
+      <motion.div 
+        className="flex gap-8 items-center px-4"
+        style={{ x: xTransform2 }}
+      >
+        {items.map((item, i) => (
+          <div key={`m2-${i}`} className="flex items-center gap-8 group">
+            <span className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 group-hover:opacity-100 group-hover:text-pink-500 transition-all duration-300">
+              {item}
+            </span>
+            <Star className="text-[#3B82F6] fill-[#3B82F6]" size={32} />
           </div>
         ))}
       </motion.div>
@@ -577,6 +642,14 @@ const ScrollToTop = () => {
 
 const BentoCard = ({ children, className, delay = 0, title, fullContent }: { children: React.ReactNode, className?: string, delay?: number, title?: string, fullContent?: React.ReactNode }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
 
   return (
     <>
@@ -584,13 +657,27 @@ const BentoCard = ({ children, className, delay = 0, title, fullContent }: { chi
         <motion.div 
           layoutId={`card-${title}`}
           onClick={() => fullContent && setIsExpanded(true)}
+          onMouseMove={handleMouseMove}
           whileHover={{ y: -5 }}
           className={`h-full bg-white/60 dark:bg-white/5 backdrop-blur-md rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-white/20 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-md hover:border-blue-500/30 ${fullContent ? 'cursor-pointer' : ''}`}
         >
-          <div className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_80%)]" />
-          {children}
+          <motion.div
+            className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 z-0"
+            style={{
+              background: useMotionTemplate`
+                radial-gradient(
+                  400px circle at ${mouseX}px ${mouseY}px,
+                  rgba(59, 130, 246, 0.15),
+                  transparent 80%
+                )
+              `,
+            }}
+          />
+          <div className="relative z-10 w-full h-full flex flex-col justify-between">
+            {children}
+          </div>
           {fullContent && (
-            <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity z-10">
               <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
                 <ArrowUpRight size={16} />
               </div>
@@ -711,7 +798,7 @@ const BentoGrid = ({ settings }: { settings: any }) => {
                   <Zap size={20} />
                 </div>
                 <div>
-                  <p className="text-6xl font-display font-bold tracking-tighter mb-2">{settings?.expYears || "3+"}</p>
+                  <p className="text-6xl font-display font-bold tracking-tighter mb-2">{settings?.expYears || "1+"}</p>
                   <p className="opacity-80 font-medium tracking-widest uppercase text-sm">Yillik tajriba</p>
                 </div>
               </div>
@@ -1354,8 +1441,8 @@ const Contact = ({ settings }: { settings: any }) => {
           </p>
           
           <div className="flex flex-col gap-6">
-            <a href={`mailto:${settings?.email || 'hello@example.com'}`} className="text-2xl md:text-4xl font-light transition-colors w-max hover:text-[#3B82F6]">
-              {settings?.email || 'hello@example.com'}
+            <a href={`mailto:${settings?.email || 'sanjarbekotabekov010@gmail.com'}`} className="text-2xl md:text-4xl font-light transition-colors w-max hover:text-[#3B82F6]">
+              {settings?.email || 'sanjarbekotabekov010@gmail.com'}
             </a>
             <div className="flex gap-4 mt-4">
               {settings?.github && (
@@ -1539,7 +1626,6 @@ export default function Portfolio() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <ReactionsWidget />
         <ScrollToTop />
         <FloatingNav isDark={isDark} toggleDark={toggleDark} />
         <main className="relative z-10">
@@ -1558,6 +1644,9 @@ export default function Portfolio() {
             <ProjectsSection settings={settings} />
           </SectionWrapper>
           <SectionWrapper>
+            <StatsSection />
+          </SectionWrapper>
+          <SectionWrapper>
             <WorkflowSection />
           </SectionWrapper>
           <SectionWrapper>
@@ -1565,6 +1654,9 @@ export default function Portfolio() {
           </SectionWrapper>
           <SectionWrapper>
             <ExperienceEducation />
+          </SectionWrapper>
+          <SectionWrapper>
+            <FAQSection />
           </SectionWrapper>
           <SectionWrapper>
             <Contact settings={settings} />
