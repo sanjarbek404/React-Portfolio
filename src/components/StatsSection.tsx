@@ -1,16 +1,16 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../lib/LanguageContext';
-import { Code2, Users, Coffee, Rocket } from 'lucide-react';
+import { Award, Code2, Users, Star } from 'lucide-react';
 
 export const StatsSection = () => {
   const { lang, t } = useLanguage();
   
   const defaultIcons = [
-    <Rocket size={24} />,
-    <Users size={24} />,
+    <Award size={24} />,
     <Code2 size={24} />,
-    <Coffee size={24} />
+    <Users size={24} />,
+    <Star size={24} />
   ];
 
   // Try to use t.statsCards if available, otherwise fallback to empty array

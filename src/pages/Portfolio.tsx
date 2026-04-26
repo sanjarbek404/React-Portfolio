@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, AnimatePresence, useInView, useTransform, useMotionTemplate, useMotionValue } from 'motion/react';
-import { Github, Linkedin, Instagram, Mail, ArrowRight, Code, Globe, Zap, Layers, Moon, Sun, Award, ExternalLink, Briefcase, MonitorSmartphone, Server, PenTool, GraduationCap, Lock, FileText, Terminal, Coffee, Users, User, Star, ArrowUpRight, Send, Copy, Check, Download, Cpu, Braces, X, Palette, Database, Music, Heart, ThumbsUp, Flame, Rocket } from 'lucide-react';
+import { Github, Linkedin, Instagram, Mail, ArrowRight, Code, Globe, Zap, Layers, Moon, Sun, Award, ExternalLink, Briefcase, MonitorSmartphone, Server, PenTool, GraduationCap, Lock, FileText, Terminal, Coffee, Users, User, Star, ArrowUpRight, Send, Copy, Check, Download, Cpu, Braces, X, Palette, Database, Music, Code2 } from 'lucide-react';
 import { db, isFirebaseConfigured, handleFirestoreError, OperationType } from '../lib/firebase';
 import { collection, onSnapshot, doc, setDoc, increment, addDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
@@ -11,32 +11,10 @@ import { FAQSection } from '../components/FAQSection';
 import { StatsSection } from '../components/StatsSection';
 
 const Magnetic = ({ children, className = "", strength = 0.5 }: { children: React.ReactNode, strength?: number, className?: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouse = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current!.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * strength, y: middleY * strength });
-  };
-
-  const reset = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      onMouseMove={handleMouse}
-      onMouseLeave={reset}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -92,33 +70,9 @@ const WordReveal = ({ text, className = "" }: { text: string, className?: string
 };
 
 const HoverGlow = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
   return (
-    <div
-      className={`group relative ${className}`}
-      onMouseMove={handleMouseMove}
-    >
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100 z-0"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              450px circle at ${mouseX}px ${mouseY}px,
-              rgba(59, 130, 246, 0.15),
-              transparent 80%
-            )
-          `,
-        }}
-      />
-      <div className="relative z-10 w-full h-full">
+    <div className={`relative ${className}`}>
+      <div className="relative w-full h-full">
         {children}
       </div>
     </div>
@@ -230,7 +184,7 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] md:w-auto`}
       >
-        <div className={`flex justify-between items-center gap-4 md:gap-8 transition-all duration-500 bg-white/60 dark:bg-black/60 backdrop-blur-md px-4 md:px-6 py-3 rounded-full border border-white/20 dark:border-white/10 shadow-lg`}>
+        <div className={`flex justify-between items-center gap-4 md:gap-8 transition-all duration-500 bg-white/70 dark:bg-[#111111]/70 backdrop-blur-xl px-4 md:px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-md`}>
           
             <a href="#" className="text-lg font-bold tracking-tighter text-[#1d1d1f] dark:text-white flex items-center justify-center w-10 h-10">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1d1d1f] dark:text-white">
@@ -370,8 +324,23 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
 
 const LocalTime = () => {
   const [time, setTime] = useState(new Date());
+  const [location, setLocation] = useState({ city: 'Tashkent', country: 'UZ', timezone: 'Asia/Tashkent' });
 
   useEffect(() => {
+    // Fetch time zone dynamically based on user ip
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.city && data.timezone) {
+          setLocation({
+            city: data.city,
+            country: data.country_code,
+            timezone: data.timezone
+          });
+        }
+      })
+      .catch((e) => console.log('Location fetch error', e));
+
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -379,14 +348,14 @@ const LocalTime = () => {
   return (
     <div className="flex items-center gap-2 text-sm font-mono text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-black/20 px-4 py-2 rounded-full border border-black/5 dark:border-white/5 backdrop-blur-md w-max">
       <Globe size={14} className="animate-pulse text-blue-500" />
-      <span>Tashkent, UZ</span>
+      <span>{location.city}, {location.country}</span>
       <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600 mx-1"></span>
       <span>
         {time.toLocaleTimeString('en-GB', {
           hour: '2-digit',
           minute: '2-digit',
           hour12: false,
-          timeZone: 'Asia/Tashkent'
+          timeZone: location.timezone
         })}
       </span>
     </div>
@@ -399,7 +368,25 @@ const Hero = ({ settings }: { settings: any }) => {
   const [copied, setCopied] = useState(false);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -100]);
+  const y2 = useTransform(scrollY, [0, 1000], [0, -50]);
+
+  // 3D Tilt Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useTransform(mouseY, [-400, 400], [10, -10]);
+  const rotateY = useTransform(mouseX, [-400, 400], [-10, 10]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    mouseX.set(clientX - innerWidth / 2);
+    mouseY.set(clientY - innerHeight / 2);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   useEffect(() => {
     if (isFirebaseConfigured && db) {
@@ -422,14 +409,18 @@ const Hero = ({ settings }: { settings: any }) => {
   };
 
   return (
-    <section className="relative pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto min-h-[90vh] flex flex-col justify-center overflow-hidden">
+    <section 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto min-h-[90vh] flex flex-col justify-center overflow-hidden [perspective:1000px]"
+    >
       <div className="w-full relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <motion.div style={{ y: y1 }} className="flex-1 flex flex-col items-start text-left w-full">
             <StaggerContainer delay={0.5}>
               <StaggerItem>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
-                  <div className="flex items-center gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-full text-sm font-medium border border-blue-500/20 w-max shadow-sm">
+                  <div className="flex items-center gap-2 bg-white/60 dark:bg-white/5 backdrop-blur-md text-[#1d1d1f] dark:text-white px-5 py-2.5 rounded-full text-sm font-medium border border-black/5 dark:border-white/5 shadow-sm">
                     <span className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
@@ -441,22 +432,22 @@ const Hero = ({ settings }: { settings: any }) => {
               </StaggerItem>
 
               <StaggerItem>
-                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[5.5rem] xl:text-[7rem] leading-[0.85] font-display font-bold tracking-tighter uppercase text-[#1d1d1f] dark:text-white mb-6">
+                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[6rem] xl:text-[7.5rem] leading-[1.05] font-display font-bold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-6 relative">
                   <Typewriter text="Sanjarbek" delay={0.6} /> <br/> 
-                  <Typewriter text="Otabekov." delay={0.9} className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] via-blue-400 to-cyan-400" />
+                  <Typewriter text="Otabekov." delay={0.9} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300" />
                 </h1>
               </StaggerItem>
               
               <StaggerItem>
-                <div className="text-xl md:text-2xl font-light tracking-tight text-[#86868b] dark:text-gray-400 max-w-2xl leading-relaxed mt-8 border-l-2 border-blue-500/30 pl-6">
+                <div className="text-xl md:text-2xl font-light tracking-tight text-[#86868b] dark:text-[#a1a1a6] max-w-2xl leading-relaxed mt-6">
                   <WordReveal text={t.hero.description} />
                 </div>
               </StaggerItem>
 
               <StaggerItem>
-                <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto items-center mt-10">
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center mt-10">
                   <Magnetic>
-                    <a href="#projects" className="group relative overflow-hidden bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] px-10 py-5 rounded-full font-semibold transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1">
+                    <a href="#projects" className="group relative overflow-hidden bg-blue-600 dark:bg-blue-500 text-white px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 active:scale-95">
                       {t.hero.projectsBtn}
                       <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </a>
@@ -464,8 +455,8 @@ const Hero = ({ settings }: { settings: any }) => {
                   
                   {settings?.resume && (
                     <Magnetic>
-                      <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="group relative overflow-hidden bg-white dark:bg-[#1d1d1f] text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 px-8 py-4 rounded-full font-semibold transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-blue-500/30">
-                        <FileText size={18} className="text-blue-500" />
+                      <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="group relative overflow-hidden bg-white/50 dark:bg-white/5 backdrop-blur-md text-[#1d1d1f] dark:text-white border border-black/5 dark:border-white/5 px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm hover:bg-white dark:hover:bg-white/10 hover:scale-105 active:scale-95">
+                        <FileText size={18} className="opacity-70" />
                         {t.hero.cvBtn}
                       </a>
                     </Magnetic>
@@ -505,25 +496,26 @@ const Hero = ({ settings }: { settings: any }) => {
           </motion.div>
 
           <motion.div
-            style={{ y: y2 }}
+            style={{ y: y2, rotateX, rotateY }}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[380px] lg:h-[380px] xl:w-[450px] xl:h-[450px] mt-12 lg:mt-0"
+            className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0 [transform-style:preserve-3d]"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/40 to-cyan-400/40 rounded-full blur-[80px]"></div>
+            {/* Background elements */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/40 via-cyan-400/20 to-purple-500/40 rounded-[3rem] blur-[60px] transform -rotate-6 animate-pulse" style={{ animationDuration: '4s' }}></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/40 to-blue-500/40 rounded-full blur-[80px]"></div>
             
             {/* Main Image Card */}
-            <div className="relative w-full h-full rounded-[3rem] overflow-hidden border border-white/20 dark:border-white/10 shadow-2xl backdrop-blur-sm bg-white/5 p-2">
-              <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-100 dark:bg-[#111] relative group">
+            <div className="relative w-full h-full rounded-[3rem] border border-white/40 dark:border-white/10 shadow-2xl backdrop-blur-md bg-white/10 dark:bg-white/5 p-3 group">
+              <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-100 dark:bg-[#0a0a0a] relative ring-1 ring-black/5 dark:ring-white/10">
                 {heroImage ? (
                   <img 
                     src={heroImage.startsWith('/') ? heroImage : heroImage} 
                     alt="Sanjarbek Otabekov" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
-                      // Fallback if image fails to load
                       (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/sanjarbek/800/800';
                     }}
                   />
@@ -532,8 +524,31 @@ const Hero = ({ settings }: { settings: any }) => {
                     <User size={120} className="text-blue-500/40" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
+                  <span className="text-white font-medium px-6 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Sanjarbek Otabekov</span>
+                </div>
               </div>
+              
+              {/* Floating tech stack or badges */}
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -right-6 top-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 backdrop-blur-3xl p-3 sm:p-4 rounded-2xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 flex items-center gap-3 group-hover:translate-x-2 transition-transform"
+              >
+                <div className="relative flex h-3 w-3">
+                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+                </div>
+                <span className="text-xs sm:text-sm font-black tracking-widest text-[#1d1d1f] dark:text-white uppercase">PRO</span>
+              </motion.div>
+              
+              <motion.div 
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -left-6 bottom-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 backdrop-blur-3xl p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 group-hover:-translate-x-2 transition-transform cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              >
+                <Code2 size={24} className="text-blue-600 dark:text-blue-400" />
+              </motion.div>
             </div>
           </motion.div>
         </div>
@@ -554,43 +569,32 @@ const Hero = ({ settings }: { settings: any }) => {
 const Marquee = () => {
   const items = [
     "CREATIVE DEVELOPER", "UI/UX DESIGNER", "FRONTEND ENGINEER", "FULLSTACK ARCHITECT",
+    "CREATIVE DEVELOPER", "UI/UX DESIGNER", "FRONTEND ENGINEER", "FULLSTACK ARCHITECT",
     "CREATIVE DEVELOPER", "UI/UX DESIGNER", "FRONTEND ENGINEER", "FULLSTACK ARCHITECT"
   ];
+  
   const { scrollY } = useScroll();
   const xTransform = useTransform(scrollY, [0, 2000], [0, -1000]);
-  const xTransform2 = useTransform(scrollY, [0, 2000], [-1000, 0]);
 
   return (
-    <div className="py-6 sm:py-10 bg-[#1d1d1f] dark:bg-white overflow-hidden flex flex-col gap-4 whitespace-nowrap transform -rotate-2 scale-110 shadow-2xl z-20 relative">
+    <div className="py-6 sm:py-8 bg-[#1d1d1f] dark:bg-white overflow-hidden whitespace-nowrap transform -rotate-2 scale-110 shadow-2xl z-20 relative flex">
       <motion.div 
-        className="flex gap-8 items-center px-4"
+        className="flex gap-8 items-center px-4 w-max"
         style={{ x: xTransform }}
       >
         {items.map((item, i) => (
           <div key={`m1-${i}`} className="flex items-center gap-8 group">
-            <span className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 group-hover:opacity-100 group-hover:text-blue-500 transition-all duration-300">
+            <span className="text-4xl md:text-5xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 hover:opacity-100 hover:text-blue-500 transition-all duration-300">
               {item}
             </span>
-            <Star className="text-[#3B82F6] fill-[#3B82F6]" size={32} />
-          </div>
-        ))}
-      </motion.div>
-      <motion.div 
-        className="flex gap-8 items-center px-4"
-        style={{ x: xTransform2 }}
-      >
-        {items.map((item, i) => (
-          <div key={`m2-${i}`} className="flex items-center gap-8 group">
-            <span className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 group-hover:opacity-100 group-hover:text-pink-500 transition-all duration-300">
-              {item}
-            </span>
-            <Star className="text-[#3B82F6] fill-[#3B82F6]" size={32} />
+            <Star className="text-[#3B82F6] fill-[#3B82F6] opacity-80" size={28} />
           </div>
         ))}
       </motion.div>
     </div>
   );
 };
+
 
 
 
@@ -659,7 +663,7 @@ const BentoCard = ({ children, className, delay = 0, title, fullContent }: { chi
           onClick={() => fullContent && setIsExpanded(true)}
           onMouseMove={handleMouseMove}
           whileHover={{ y: -5 }}
-          className={`h-full bg-white/60 dark:bg-white/5 backdrop-blur-md rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-white/20 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-md hover:border-blue-500/30 ${fullContent ? 'cursor-pointer' : ''}`}
+          className={`h-full bg-white/70 dark:bg-black/30 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-black/5 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 ${fullContent ? 'cursor-pointer' : ''}`}
         >
           <motion.div
             className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 z-0"
@@ -946,12 +950,12 @@ const SkillsAndCerts = () => {
               <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white dark:from-[#0a0a0a] to-transparent z-10"></div>
               
               <motion.div 
-                className="flex gap-12 items-center"
-                animate={{ x: [0, -2000] }}
+                className="flex gap-12 items-center w-max"
+                animate={{ x: ["0%", "-50%"] }}
                 transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
               >
-                {[...skills, ...skills, ...skills].map((skill, idx) => (
-                  <div key={idx} className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
+                {skills.length > 0 && [...skills, ...skills, ...skills, ...skills].map((skill, idx) => (
+                  <div key={idx} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
                     {getSkillIcon(skill.name)}
                     <span className="text-xl font-bold text-[#1d1d1f] dark:text-white whitespace-nowrap">{skill.name}</span>
                   </div>
@@ -1101,6 +1105,135 @@ const ServicesSection = () => {
   );
 };
 
+const GithubContributionGraph = () => {
+  const { t } = useLanguage();
+  const [data, setData] = useState<number[][]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://github-contributions-api.deno.dev/sanjarbek404.json')
+      .then(res => res.json())
+      .then(resData => {
+        if (resData && resData.contributions) {
+           const mapLevel = (level: string) => {
+             switch (level) {
+               case 'FIRST_QUARTILE': return 1;
+               case 'SECOND_QUARTILE': return 2;
+               case 'THIRD_QUARTILE': return 3;
+               case 'FOURTH_QUARTILE': return 4;
+               default: return 0;
+             }
+           };
+
+           // Transpose the data back to week-based (the api gives it already as week-based)
+           const parsedData = resData.contributions.map((week: any[]) => 
+             week.map((day: any) => mapLevel(day.contributionLevel))
+           );
+           setData(parsedData);
+           setTotal(resData.totalContributions || 0);
+        }
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.error('Failed to load Github data', e);
+        // Fallback or empty state
+        const fallback = Array(52).fill(0).map(() => Array(7).fill(0));
+        setData(fallback);
+        setLoading(false);
+      });
+  }, []);
+
+  const getColor = (level: number) => {
+    if (level === 0) return 'bg-gray-100 dark:bg-[#161b22]';
+    if (level === 1) return 'bg-[#0e4429]';
+    if (level === 2) return 'bg-[#006d32]';
+    if (level === 3) return 'bg-[#26a641]';
+    return 'bg-[#39d353]';
+  };
+
+  return (
+    <section id="github-activity" className="py-24 px-6 md:px-12 bg-white/30 dark:bg-black/10 border-y border-black/5 dark:border-white/5">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white mb-4">
+              <Code className="inline-block mr-3 text-blue-500" size={40} />
+              <Typewriter text="Open Source & Activity" />
+            </h2>
+            <p className="text-lg text-[#86868b] dark:text-gray-400 font-light">
+              Mening GitHub faolligim va ochiq manbali loyihalardagi hissalarim tarixi. Hozirgi kunda <strong className="text-blue-500">{total}</strong> ta hissa qo'shdim.
+            </p>
+          </div>
+          <a href="https://github.com/sanjarbek404" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] font-semibold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-xl">
+            <Github size={18} />
+            <span>@sanjarbek404 (GitHub)</span>
+          </a>
+        </div>
+        
+        <div className="bg-white dark:bg-[#0d1117] p-8 rounded-[2rem] border border-black/5 dark:border-white/10 shadow-lg overflow-x-auto custom-scrollbar relative">
+          {loading && (
+             <div className="absolute inset-0 z-10 bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-sm flex items-center justify-center rounded-[2rem]">
+                <div className="flex flex-col items-center gap-3">
+                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                   <span className="text-sm font-medium text-gray-500">Faollik yuklanmoqda...</span>
+                </div>
+             </div>
+          )}
+          <div className="min-w-max">
+            <div className="flex gap-1.5 mb-2 text-xs font-medium text-gray-400">
+              <span className="w-8"></span>
+              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(m => (
+                <span key={m} className="flex-1 min-w-[3.5rem]">{m}</span>
+              ))}
+            </div>
+            <div className="flex gap-1.5">
+              <div className="flex flex-col gap-1.5 text-xs font-medium text-gray-400 mt-1">
+                <span className="h-3">Mon</span>
+                <span className="h-3"></span>
+                <span className="h-3">Wed</span>
+                <span className="h-3"></span>
+                <span className="h-3">Fri</span>
+                <span className="h-3"></span>
+                <span className="h-3"></span>
+              </div>
+              <div className="flex gap-1.5">
+                {data.map((week, wIndex) => (
+                  <div key={wIndex} className="flex flex-col gap-1.5">
+                    {week.map((level, dIndex) => (
+                      <motion.div
+                        key={`${wIndex}-${dIndex}`}
+                        initial={{ opacity: 0, scale: 0 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: (wIndex % 10) * 0.05 + dIndex * 0.02 }}
+                        className={`w-3 h-3 rounded-[2px] ${getColor(level)} transition-colors duration-300 hover:ring-2 hover:ring-white dark:hover:ring-black cursor-crosshair`}
+                        title={level > 0 ? `Activity level: ${level}` : 'No activity'}
+                      ></motion.div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center justify-between mt-6">
+              <div className="text-sm text-gray-500 font-medium">Oxirgi 1 yil ichidagi faoliyat</div>
+              <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                <span>Kam</span>
+                <div className="flex gap-1">
+                  {[0, 1, 2, 3, 4].map(l => (
+                    <div key={l} className={`w-3 h-3 rounded-[2px] ${getColor(l)}`}></div>
+                  ))}
+                </div>
+                <span>Ko'p</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const WorkflowSection = () => {
   const { t } = useLanguage();
   const steps = [
@@ -1223,7 +1356,7 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                   key={project.id}
-                  className="bg-white/60 dark:bg-white/5 backdrop-blur-md rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-6 border border-white/20 dark:border-white/10 shadow-md group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-transform duration-300"
+                  className="bg-white/70 dark:bg-black/30 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5"
                 >
                   {/* Floating Tag */}
                   <div className="absolute top-6 right-6 z-20 bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold text-[10px] shadow-lg uppercase tracking-wider">
@@ -1395,6 +1528,58 @@ const ExperienceEducation = () => {
   );
 };
 
+const Newsletter = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setStatus('loading');
+    setTimeout(() => {
+      setStatus('success');
+      setEmail('');
+      toast.success("Yangiliklarga muvaffaqiyatli obuna bo'ldingiz!");
+      setTimeout(() => setStatus('idle'), 3000);
+    }, 1500);
+  };
+
+  return (
+    <section className="py-24 px-6 md:px-12 bg-[#3B82F6] dark:bg-blue-900 border-y border-black/5 dark:border-white/5 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-950 dark:to-purple-900 opacity-90"></div>
+      <div className="absolute inset-0 pattern-dots opacity-20"></div>
+      <div className="max-w-4xl mx-auto relative z-10 text-center text-white">
+        <Mail size={48} className="mx-auto mb-6 text-white/80" />
+        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter mb-4">
+          Yangiliklardan Xabardor Bo'ling
+        </h2>
+        <p className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto mb-10">
+          Mening so'nggi maqolalarim, ochiq manbali loyihalarim va sohaga oid yangiliklarga obuna bo'ling.
+        </p>
+        
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+          <input 
+            type="email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email manzilingiz" 
+            required 
+            className="flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/50 px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-md transition-all"
+          />
+          <button 
+            type="submit" 
+            disabled={status !== 'idle'}
+            className="bg-white text-blue-600 font-bold px-8 py-4 rounded-full hover:scale-105 transition-transform disabled:opacity-50 flex items-center justify-center min-w-[140px]"
+          >
+            {status === 'loading' ? <span className="animate-pulse">Kuting...</span> : status === 'success' ? <Check size={20} /> : 'Obuna Bolish'}
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+};
+
 const Contact = ({ settings }: { settings: any }) => {
   const { t, lang } = useLanguage();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -1432,7 +1617,7 @@ const Contact = ({ settings }: { settings: any }) => {
           transition={{ duration: 0.8 }}
         >
           <TextReveal>
-            <h2 className="text-6xl md:text-8xl font-display font-bold tracking-tighter uppercase mb-8 leading-[0.9]">
+            <h2 className="text-6xl md:text-8xl font-display font-bold tracking-tighter uppercase mb-8 leading-[1.05]">
               <Typewriter text="Keling," /> <br/> <Typewriter text="gaplashamiz." delay={0.3} />
             </h2>
           </TextReveal>
@@ -1617,7 +1802,7 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-[#0a0a0a] dark:to-black min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-300 relative overflow-x-hidden">
+    <div className="bg-gradient-to-br from-blue-50/50 via-[#fbfbfd] to-indigo-50/50 dark:from-[#0a0f1c] dark:via-[#050505] dark:to-[#0f0a1c] min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-700 ease-out relative overflow-x-hidden">
       <ScrollProgress />
       <BackgroundAnimation />
       
@@ -1644,6 +1829,9 @@ export default function Portfolio() {
             <ProjectsSection settings={settings} />
           </SectionWrapper>
           <SectionWrapper>
+            <GithubContributionGraph />
+          </SectionWrapper>
+          <SectionWrapper>
             <StatsSection />
           </SectionWrapper>
           <SectionWrapper>
@@ -1657,6 +1845,9 @@ export default function Portfolio() {
           </SectionWrapper>
           <SectionWrapper>
             <FAQSection />
+          </SectionWrapper>
+          <SectionWrapper>
+            <Newsletter />
           </SectionWrapper>
           <SectionWrapper>
             <Contact settings={settings} />

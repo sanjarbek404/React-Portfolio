@@ -22,7 +22,7 @@ export const translations = {
       aboutTitle: "Sodda. Kreativ. Samarali.",
       aboutFull: "Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o'ringa qo'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.",
       aboutShort: "Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.",
-      description: "Men Sanjarbek Otabekov, tajribali Full-Stack dasturchiman. 5 yildan ortiq vaqt davomida murakkab veb-tizimlar va mobil ilovalar ustida ishlayapman. Mening maqsadim - foydalanuvchilar hayotini osonlashtiradigan va bizneslarga o'sishga yordam beradigan raqamli mahsulotlar yaratish.",
+      description: "Men Sanjarbek Otabekov, Full-Stack dasturchiman. 1 yildan kam bo'lmagan vaqt davomida zamonaviy veb-tizimlar ustida ishlayapman. Mening maqsadim - mijozlar talablariga mos yuqori sifatli mahsulotlar yaratish.",
       stats: {
         experience: "Yillik tajriba",
         projects: "Tugallangan loyihalar",
@@ -94,15 +94,14 @@ export const translations = {
       title: "Mijozlar Fikri",
       subtitle: "Men bilan ishlagan insonlar nima deydi?",
       items: [
-        { name: "Mebel Do`koni", role: "mebelmashhura.uz", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." },
-
+        { name: "Mashhura Mebel", role: "Mebel Do'koni", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." }
       ]
     },
     statsCards: [
-      { text: "Tugallangan Loyihalar", value: "5+" },
+      { text: "Yillik Tajriba", value: "1+" },
+      { text: "Tugallangan Loyihalar", value: "3+" },
       { text: "Xursand Mijozlar", value: "3+" },
-      { text: "Qator Kod", value: "100k+" },
-      { text: "Chashka Qahva", value: "500+" }
+      { text: "Mijozlar Bahosi", value: "5/5" }
     ],
     footer: {
       rights: "Barcha huquqlar himoyalangan."
@@ -130,7 +129,7 @@ export const translations = {
       aboutTitle: "Просто. Креативно. Эффективно.",
       aboutFull: "Программирование для меня — это не просто написание кода, это создание инструментов, облегчающих жизнь людям. В каждом проекте я ставлю минимализм и высокую производительность на первое место.\n\nМоя цель — сделать пользовательские интерфейсы настолько простыми, чтобы даже человек, зашедший впервые, чувствовал себя как дома. Находить креативные решения сложных проблем — моя главная сила.",
       aboutShort: "Программирование для меня — это не просто написание кода, это создание инструментов, облегчающих жизнь людям.",
-      description: "Я Санжарбек Отабеков, опытный Full-Stack разработчик. Более 5 лет я работаю над сложными веб-системами и мобильными приложениями. Моя цель — создавать цифровые продукты, которые облегчают жизнь пользователей и помогают бизнесу расти.",
+      description: "Я Санжарбек Отабеков, Full-Stack разработчик. Более 1 года я работаю над современными веб-системами. Моя цель - создавать высококачественные продукты в соответствии с требованиями клиентов.",
       stats: {
         experience: "Лет опыта",
         projects: "Завершенных проектов",
@@ -202,14 +201,14 @@ export const translations = {
       title: "Отзывы клиентов",
       subtitle: "Что говорят люди, с которыми я работал?",
       items: [
-         { name: "Mebel Do`koni", role: "mebelmashhura.uz", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." },
+        { name: "Mashhura Mebel", role: "Магазин мебели", text: "Работать с Санжарбеком было очень легко. Он быстро понял наши требования и создал отличное веб-приложение." }
       ]
     },
     statsCards: [
+      { text: "Год Опыта", value: "1+" },
       { text: "Завершенные проекты", value: "3+" },
       { text: "Счастливые клиенты", value: "3+" },
-      { text: "Строк кода", value: "100k+" },
-      { text: "Чашек кофе", value: "500+" }
+      { text: "Оценка клиентов", value: "5/5" }
     ],
     footer: {
       rights: "Все права защищены."
@@ -237,7 +236,7 @@ export const translations = {
       aboutTitle: "Simple. Creative. Effective.",
       aboutFull: "For me, programming is not just writing code; it's creating tools that make people's lives easier. In every project, I prioritize minimalism and high performance.\n\nMy goal is to make user interfaces so simple that even a first-time visitor feels at home. Finding creative solutions to complex problems is my main strength.",
       aboutShort: "For me, programming is not just writing code; it's creating tools that make people's lives easier.",
-      description: "I'm Sanjarbek Otabekov, an experienced Full-Stack developer. For over 5 years, I've been working on complex web systems and mobile applications. My goal is to create digital products that make users' lives easier and help businesses grow.",
+      description: "I'm Sanjarbek Otabekov, a Full-Stack developer. For over 1 year, I've been working on modern web systems. My goal is to create high-quality products according to client requirements.",
       stats: {
         experience: "Years of experience",
         projects: "Completed projects",
@@ -309,14 +308,14 @@ export const translations = {
       title: "Testimonials",
       subtitle: "What people I've worked with say?",
       items: [
-         { name: "Mebel Do`koni", role: "mebelmashhura.uz", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." },
+        { name: "Mashhura Mebel", role: "Furniture Store", text: "Working with Sanjarbek was very easy. He quickly understood our requirements and created a great web application." }
       ]
     },
     statsCards: [
+      { text: "Years of Experience", value: "1+" },
       { text: "Completed Projects", value: "3+" },
       { text: "Happy Clients", value: "3+" },
-      { text: "Lines of Code", value: "100k+" },
-      { text: "Cups of Coffee", value: "500+" }
+      { text: "Client Rating", value: "5/5" }
     ],
     footer: {
       rights: "All rights reserved."
