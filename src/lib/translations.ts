@@ -94,7 +94,7 @@ export const translations = {
       title: "Mijozlar Fikri",
       subtitle: "Men bilan ishlagan insonlar nima deydi?",
       items: [
-        { name: "Mashhura Mebel", role: "Mebel Do'koni", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." }
+        { name: "T-Mebel", role: "Mebel Do'koni", text: "Sanjarbek bilan ishlash juda oson kechdi. U bizning talablarimizni tez tushundi va ajoyib veb-ilova yaratib berdi." }
       ]
     },
     statsCards: [
@@ -103,6 +103,13 @@ export const translations = {
       { text: "Xursand Mijozlar", value: "3+" },
       { text: "Mijozlar Bahosi", value: "5/5" }
     ],
+    contact: {
+      letstalk1: "Keling,",
+      letstalk2: "gaplashamiz.",
+      desc: "Yangi loyiha ustida ishlashga yoki shunchaki fikr almashishga doim tayyorman.",
+      openSourceTitle: "Open Source & Faollik",
+      openSourceDesc: "Bo'sh vaqtlarimda ochiq kodli dasturiy ta'minotlarga o'z hissamni qo'shaman va o'zgarishlar kiritaman."
+    },
     footer: {
       rights: "Barcha huquqlar himoyalangan."
     }
@@ -201,7 +208,7 @@ export const translations = {
       title: "Отзывы клиентов",
       subtitle: "Что говорят люди, с которыми я работал?",
       items: [
-        { name: "Mashhura Mebel", role: "Магазин мебели", text: "Работать с Санжарбеком было очень легко. Он быстро понял наши требования и создал отличное веб-приложение." }
+        { name: "T-Mebel", role: "Магазин мебели", text: "Работать с Санжарбеком было очень легко. Он быстро понял наши требования и создал отличное веб-приложение." }
       ]
     },
     statsCards: [
@@ -210,6 +217,13 @@ export const translations = {
       { text: "Счастливые клиенты", value: "3+" },
       { text: "Оценка клиентов", value: "5/5" }
     ],
+    contact: {
+      letstalk1: "Давайте",
+      letstalk2: "поговорим.",
+      desc: "Я всегда готов обсудить новый проект или просто обменяться идеями.",
+      openSourceTitle: "Open Source & Активность",
+      openSourceDesc: "В свободное время я вношу свой вклад в проекты с открытым исходным кодом."
+    },
     footer: {
       rights: "Все права защищены."
     }
@@ -308,7 +322,7 @@ export const translations = {
       title: "Testimonials",
       subtitle: "What people I've worked with say?",
       items: [
-        { name: "Mashhura Mebel", role: "Furniture Store", text: "Working with Sanjarbek was very easy. He quickly understood our requirements and created a great web application." }
+        { name: "T-Mebel", role: "Furniture Store", text: "Working with Sanjarbek was very easy. He quickly understood our requirements and created a great web application." }
       ]
     },
     statsCards: [
@@ -317,6 +331,13 @@ export const translations = {
       { text: "Happy Clients", value: "3+" },
       { text: "Client Rating", value: "5/5" }
     ],
+    contact: {
+      letstalk1: "Let's",
+      letstalk2: "talk.",
+      desc: "I'm always ready to work on a new project or just exchange ideas.",
+      openSourceTitle: "Open Source & Activity",
+      openSourceDesc: "In my free time, I contribute to open source software and make a difference."
+    },
     footer: {
       rights: "All rights reserved."
     }

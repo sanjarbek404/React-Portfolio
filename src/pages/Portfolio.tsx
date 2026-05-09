@@ -9,8 +9,18 @@ import { useLanguage } from '../lib/LanguageContext';
 
 import { FAQSection } from '../components/FAQSection';
 import { StatsSection } from '../components/StatsSection';
+import { CustomCursor } from '../components/CustomCursor';
 
 const Magnetic = ({ children, className = "", strength = 0.5 }: { children: React.ReactNode, strength?: number, className?: string }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0);
+  }, []);
+
+  if (isMobile) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <div className={className}>
       {children}
@@ -125,9 +135,9 @@ const Typewriter = ({ text, delay = 0, className = "" }: { text: string, delay?:
 const BackgroundAnimation = () => {
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-      <div className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] rounded-full bg-blue-500/10 blur-[100px] dark:bg-blue-600/5" />
-      <div className="absolute bottom-[-20%] right-[-20%] w-[70%] h-[70%] rounded-full bg-[#3B82F6]/10 blur-[100px] dark:bg-[#3B82F6]/5" />
-      <div className="absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full bg-purple-500/10 blur-[100px] dark:bg-purple-600/5" />
+      <div className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] rounded-full bg-blue-500/5 blur-[50px] md:bg-blue-500/10 md:blur-[100px] dark:bg-blue-600/5 transition-all duration-700 will-change-transform" />
+      <div className="absolute bottom-[-20%] right-[-20%] w-[70%] h-[70%] rounded-full bg-[#3B82F6]/5 blur-[50px] md:bg-[#3B82F6]/10 md:blur-[100px] dark:bg-[#3B82F6]/5 transition-all duration-700 will-change-transform" />
+      <div className="absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full bg-purple-500/5 blur-[50px] md:bg-purple-500/10 md:blur-[100px] dark:bg-purple-600/5 transition-all duration-700 will-change-transform" />
     </div>
   );
 };
@@ -175,8 +185,8 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
       <ThemeTransition isDark={isDark} trigger={themeTrigger} />
       <div className="fixed inset-0 z-[-1] transition-colors duration-500 overflow-hidden">
         <div className="absolute inset-0 bg-dot-pattern [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#3B82F6]/10 blur-[100px] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#3B82F6]/5 md:bg-[#3B82F6]/10 blur-[50px] md:blur-[100px] pointer-events-none will-change-transform"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/5 md:bg-blue-500/10 blur-[50px] md:blur-[100px] pointer-events-none will-change-transform"></div>
       </div>
       <motion.nav 
         initial={{ y: -100 }}
@@ -217,7 +227,7 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
           <div className="flex items-center gap-3">
             
             <div className="relative group">
-              <button className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5">
+              <button aria-label="Tilni tanlash" className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5">
                 <span className="text-lg">{lang === 'UZ' ? '🇺🇿' : lang === 'RU' ? '🇷🇺' : '🇺🇸'}</span>
                 <span className="text-xs font-black text-[#1d1d1f] dark:text-white uppercase hidden sm:inline">{lang}</span>
                 <ArrowRight size={12} className="rotate-90 text-gray-400" />
@@ -226,6 +236,7 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
                 {languages.map((l) => (
                   <button 
                     key={l}
+                    aria-label={`${l} tiliga o'zgartirish`}
                     onClick={() => setLang(l as any)} 
                     className={`w-full text-left px-4 py-3 text-sm font-bold transition-all flex items-center gap-3 rounded-xl ${lang === l ? 'bg-black/5 dark:bg-white/5 text-[#1d1d1f] dark:text-white' : 'text-gray-500 hover:bg-black/5 dark:hover:bg-white/5 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                   >
@@ -237,12 +248,12 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
               </div>
             </div>
 
-              <button onClick={handleThemeToggle} className="p-2.5 rounded-full text-[#1d1d1f] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              <button aria-label="Mavzuni o'zgartirish" onClick={handleThemeToggle} className="p-2.5 rounded-full text-[#1d1d1f] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             
             
-              <Link to="/admin" className="p-2.5 rounded-full text-gray-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-center" title="Admin Panel">
+              <Link aria-label="Admin panelga o'tish" to="/admin" className="p-2.5 rounded-full text-gray-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-center" title="Admin Panel">
                 <Lock size={18} />
               </Link>
             
@@ -366,6 +377,15 @@ const Hero = ({ settings }: { settings: any }) => {
   const { t, lang } = useLanguage();
   const [heroImage, setHeroImage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const y2 = useTransform(scrollY, [0, 1000], [0, -50]);
@@ -377,6 +397,7 @@ const Hero = ({ settings }: { settings: any }) => {
   const rotateY = useTransform(mouseX, [-400, 400], [-10, 10]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (isMobile) return;
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
     mouseX.set(clientX - innerWidth / 2);
@@ -384,6 +405,7 @@ const Hero = ({ settings }: { settings: any }) => {
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
     mouseX.set(0);
     mouseY.set(0);
   };
@@ -416,7 +438,7 @@ const Hero = ({ settings }: { settings: any }) => {
     >
       <div className="w-full relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          <motion.div style={{ y: y1 }} className="flex-1 flex flex-col items-start text-left w-full">
+          <motion.div style={isMobile ? {} : { y: y1 }} className="flex-1 flex flex-col items-start text-left w-full will-change-transform">
             <StaggerContainer delay={0.5}>
               <StaggerItem>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
@@ -432,9 +454,9 @@ const Hero = ({ settings }: { settings: any }) => {
               </StaggerItem>
 
               <StaggerItem>
-                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[6rem] xl:text-[7.5rem] leading-[1.05] font-display font-bold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-6 relative">
+                <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[6rem] xl:text-[7.5rem] leading-[1.05] md:leading-[1.1] font-display font-bold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-6 relative">
                   <Typewriter text="Sanjarbek" delay={0.6} /> <br/> 
-                  <Typewriter text="Otabekov." delay={0.9} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300" />
+                  <Typewriter text="Otabekov." delay={0.9} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 dark:from-[#38bdf8] dark:to-[#0ea5e9]" />
                 </h1>
               </StaggerItem>
               
@@ -496,11 +518,11 @@ const Hero = ({ settings }: { settings: any }) => {
           </motion.div>
 
           <motion.div
-            style={{ y: y2, rotateX, rotateY }}
+            style={isMobile ? {} : { y: y2, rotateX, rotateY }}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0 [transform-style:preserve-3d]"
+            className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0 [transform-style:preserve-3d] will-change-transform"
           >
             {/* Background elements */}
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/40 via-cyan-400/20 to-purple-500/40 rounded-[3rem] blur-[60px] transform -rotate-6 animate-pulse" style={{ animationDuration: '4s' }}></div>
@@ -573,14 +595,12 @@ const Marquee = () => {
     "CREATIVE DEVELOPER", "UI/UX DESIGNER", "FRONTEND ENGINEER", "FULLSTACK ARCHITECT"
   ];
   
-  const { scrollY } = useScroll();
-  const xTransform = useTransform(scrollY, [0, 2000], [0, -1000]);
-
   return (
     <div className="py-6 sm:py-8 bg-[#1d1d1f] dark:bg-white overflow-hidden whitespace-nowrap transform -rotate-2 scale-110 shadow-2xl z-20 relative flex">
       <motion.div 
-        className="flex gap-8 items-center px-4 w-max"
-        style={{ x: xTransform }}
+        className="flex gap-8 items-center px-4 w-max will-change-transform"
+        animate={{ x: [0, -1000] }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
       >
         {items.map((item, i) => (
           <div key={`m1-${i}`} className="flex items-center gap-8 group">
@@ -625,17 +645,18 @@ const ScrollToTop = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          className="fixed bottom-8 right-8 z-50"
+          initial={{ opacity: 0, scale: 0.5, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.5, y: 20 }}
+          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[90]"
         >
           <Magnetic strength={0.3}>
             <button
               onClick={scrollToTop}
-              className="w-14 h-14 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95"
+              className="w-14 h-14 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all hover:bg-blue-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] hover:-translate-y-1 active:scale-95 z-[90]"
+              aria-label="Yuqoriga qaytish"
             >
-              <ArrowRight className="-rotate-90" size={24} />
+              <ArrowUpRight className="-rotate-45" size={24} />
             </button>
           </Magnetic>
         </motion.div>
@@ -663,7 +684,7 @@ const BentoCard = ({ children, className, delay = 0, title, fullContent }: { chi
           onClick={() => fullContent && setIsExpanded(true)}
           onMouseMove={handleMouseMove}
           whileHover={{ y: -5 }}
-          className={`h-full bg-white/70 dark:bg-black/30 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-black/5 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 ${fullContent ? 'cursor-pointer' : ''}`}
+          className={`h-full bg-white/70 dark:bg-black/30 md:backdrop-blur-xl rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-black/5 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 ${fullContent ? 'cursor-pointer' : ''}`}
         >
           <motion.div
             className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 z-0"
@@ -735,12 +756,13 @@ const BentoGrid = ({ settings }: { settings: any }) => {
   }, []);
 
   return (
-    <section id="about" className="py-32 px-6 md:px-12">
+    <section id="about" className="py-16 md:py-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <TextReveal>
-            <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase">
-              <Typewriter text="Men haqimda" />
+            <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase relative">
+              <span className="absolute -left-6 md:-left-12 top-1/2 -translate-y-1/2 w-4 h-4 md:w-8 md:h-8 rounded-full bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.3)]"></span>
+              <Typewriter text={t.about.title} />
             </h2>
           </TextReveal>
         </div>
@@ -927,7 +949,7 @@ const SkillsAndCerts = () => {
   }, []);
 
   return (
-    <section id="skills" className="py-32 px-6 md:px-12 overflow-hidden">
+    <section id="skills" className="py-16 md:py-32 px-6 md:px-12 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <TextReveal>
@@ -1016,7 +1038,7 @@ const SkillsAndCerts = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-white/80 dark:bg-[#111]/80 backdrop-blur-md rounded-3xl border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all overflow-hidden flex flex-col"
+                  className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md rounded-3xl border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all overflow-hidden flex flex-col"
                 >
                   {cert.image && (
                     <div className="w-full h-48 overflow-hidden bg-gray-100 dark:bg-[#0a0a0a]">
@@ -1069,7 +1091,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-32 px-6 md:px-12">
+    <section id="services" className="py-16 md:py-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <TextReveal>
@@ -1084,7 +1106,7 @@ const ServicesSection = () => {
             <StaggerItem key={service.id}>
               <motion.div 
                 whileHover={{ y: -10 }}
-                className="bg-white/80 dark:bg-[#111]/80 backdrop-blur-md p-10 rounded-[2rem] border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all duration-500 shadow-sm hover:shadow-2xl"
+                className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md p-10 rounded-[2rem] border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all duration-500 shadow-sm hover:shadow-2xl"
               >
                 <div className="flex justify-between items-start mb-8">
                   <div className="text-[#1d1d1f] dark:text-white transition-colors group-hover:text-[#3B82F6] group-hover:scale-110 duration-500">
@@ -1153,13 +1175,13 @@ const GithubContributionGraph = () => {
   };
 
   return (
-    <section id="github-activity" className="py-24 px-6 md:px-12 bg-white/30 dark:bg-black/10 border-y border-black/5 dark:border-white/5">
+    <section id="github-activity" className="py-12 md:py-24 px-6 md:px-12 bg-white/30 dark:bg-black/10 border-y border-black/5 dark:border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white mb-4">
               <Code className="inline-block mr-3 text-blue-500" size={40} />
-              <Typewriter text="Open Source & Activity" />
+              <Typewriter text={t.contact?.openSourceTitle || "Open Source & Activity"} />
             </h2>
             <p className="text-lg text-[#86868b] dark:text-gray-400 font-light">
               Mening GitHub faolligim va ochiq manbali loyihalardagi hissalarim tarixi. Hozirgi kunda <strong className="text-blue-500">{total}</strong> ta hissa qo'shdim.
@@ -1244,7 +1266,7 @@ const WorkflowSection = () => {
   ];
 
   return (
-    <section className="py-32 px-6 md:px-12">
+    <section className="py-16 md:py-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
             <TextReveal>
@@ -1262,7 +1284,7 @@ const WorkflowSection = () => {
                 <StaggerItem key={step.id}>
                   <motion.div 
                     whileHover={{ y: -5 }}
-                    className="relative z-10 bg-white/80 dark:bg-[#111]/80 backdrop-blur-md p-8 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl group"
+                    className="relative z-10 bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md p-8 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl group"
                   >
                     <div className="text-5xl font-display font-bold text-black/5 dark:text-white/5 mb-6 group-hover:text-[#3B82F6]/10 transition-colors">{step.id}</div>
                     <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-3 tracking-tight">{stepData.title}</h3>
@@ -1303,7 +1325,7 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
     : projects.filter(p => p.tag === activeFilter);
 
   return (
-    <section id="projects" className="py-32 relative bg-dot-pattern">
+    <section id="projects" className="py-16 md:py-32 relative bg-dot-pattern">
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-16 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
@@ -1356,7 +1378,7 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                   key={project.id}
-                  className="bg-white/70 dark:bg-black/30 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5"
+                  className="bg-white/70 dark:bg-black/30 md:backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5"
                 >
                   {/* Floating Tag */}
                   <div className="absolute top-6 right-6 z-20 bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold text-[10px] shadow-lg uppercase tracking-wider">
@@ -1403,7 +1425,7 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
 const TestimonialsSection = () => {
   const { t } = useLanguage();
   return (
-    <section className="py-32 px-6 md:px-12">
+    <section className="py-16 md:py-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <TextReveal>
@@ -1418,7 +1440,7 @@ const TestimonialsSection = () => {
              <StaggerItem key={i}>
                <motion.div 
                 whileHover={{ y: -10 }}
-                className="h-full bg-white/80 dark:bg-[#111]/80 backdrop-blur-md p-10 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl"
+                className="h-full bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md p-10 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl"
               >
                 <div className="flex gap-1 text-yellow-400 mb-8">
                   {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
@@ -1460,7 +1482,7 @@ const ExperienceEducation = () => {
   }, []);
 
   return (
-    <section id="experience" className="py-32 px-6 md:px-12">
+    <section id="experience" className="py-16 md:py-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
         {/* Experience */}
         <div>
@@ -1546,7 +1568,7 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="py-24 px-6 md:px-12 bg-[#3B82F6] dark:bg-blue-900 border-y border-black/5 dark:border-white/5 relative overflow-hidden">
+    <section className="py-12 md:py-24 px-6 md:px-12 bg-[#3B82F6] dark:bg-blue-900 border-y border-black/5 dark:border-white/5 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-950 dark:to-purple-900 opacity-90"></div>
       <div className="absolute inset-0 pattern-dots opacity-20"></div>
       <div className="max-w-4xl mx-auto relative z-10 text-center text-white">
@@ -1608,7 +1630,7 @@ const Contact = ({ settings }: { settings: any }) => {
   };
 
   return (
-    <section id="contact" className="py-32 px-6 md:px-12 bg-[#1d1d1f] dark:bg-[#0a0a0a] text-white">
+    <section id="contact" className="py-16 md:py-32 px-6 md:px-12 bg-[#1d1d1f] dark:bg-[#0a0a0a] text-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -1617,12 +1639,12 @@ const Contact = ({ settings }: { settings: any }) => {
           transition={{ duration: 0.8 }}
         >
           <TextReveal>
-            <h2 className="text-6xl md:text-8xl font-display font-bold tracking-tighter uppercase mb-8 leading-[1.05]">
-              <Typewriter text="Keling," /> <br/> <Typewriter text="gaplashamiz." delay={0.3} />
+            <h2 className="text-5xl md:text-8xl font-display font-bold tracking-tighter uppercase mb-8 leading-[1.05]">
+              <Typewriter text={t.contact?.letstalk1 || "Keling,"} /> <br/> <Typewriter text={t.contact?.letstalk2 || "gaplashamiz."} delay={0.3} />
             </h2>
           </TextReveal>
           <p className="text-xl text-gray-400 mb-12 font-light max-w-md">
-            Yangi loyiha ustida ishlashga yoki shunchaki fikr almashishga doim tayyorman.
+            {t.contact?.desc || "Yangi loyiha ustida ishlashga yoki shunchaki fikr almashishga doim tayyorman."}
           </p>
           
           <div className="flex flex-col gap-6">
@@ -1706,16 +1728,33 @@ const Contact = ({ settings }: { settings: any }) => {
 const Footer = ({ settings }: { settings: any }) => {
   const { t } = useLanguage();
   return (
-    <footer className="bg-[#1d1d1f] dark:bg-[#050505] py-12 px-6 md:px-12 border-t border-white/10">
+    <footer className="bg-white/80 dark:bg-[#050505]/80 backdrop-blur-3xl py-12 px-6 md:px-12 border-t border-black/5 dark:border-white/10 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div className="text-gray-500 text-sm font-medium tracking-widest uppercase">
-          &copy; {new Date().getFullYear()} Sanjarbek Otabekov. {t.footer.rights}
+        <div className="flex flex-col items-center md:items-start gap-2">
+          <div className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase flex items-center gap-2">
+            &copy; {new Date().getFullYear()} Sanjarbek Otabekov. {t.footer.rights}
+          </div>
+          <div className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1 font-mono">
+            Crafted with <span className="text-red-500 animate-pulse">❤️</span> and React
+          </div>
         </div>
-        <div className="flex gap-8 text-sm font-bold tracking-widest uppercase text-gray-400">
-          {settings?.resume && <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="hover:text-white transition-colors">Resume</a>}
-          {settings?.telegram && <a href={settings.telegram} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Telegram</a>}
-          {settings?.instagram && <a href={settings.instagram} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>}
-          {settings?.github && <a href={settings.github} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Github</a>}
+        <div className="flex flex-wrap justify-center gap-8 text-sm font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500">
+          {settings?.resume && <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="hover:text-blue-500 dark:hover:text-white transition-colors relative group">
+            Resume
+            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all group-hover:w-full"></span>
+          </a>}
+          {settings?.telegram && <a href={settings.telegram} target="_blank" rel="noreferrer" className="hover:text-blue-500 dark:hover:text-white transition-colors relative group">
+            Telegram
+            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all group-hover:w-full"></span>
+          </a>}
+          {settings?.instagram && <a href={settings.instagram} target="_blank" rel="noreferrer" className="hover:text-blue-500 dark:hover:text-white transition-colors relative group">
+            Instagram
+            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all group-hover:w-full"></span>
+          </a>}
+          {settings?.github && <a href={settings.github} target="_blank" rel="noreferrer" className="hover:text-blue-500 dark:hover:text-white transition-colors relative group">
+            Github
+            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all group-hover:w-full"></span>
+          </a>}
         </div>
       </div>
     </footer>
@@ -1725,7 +1764,7 @@ const Footer = ({ settings }: { settings: any }) => {
 
 const SectionWrapper = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   return (
-    <motion.div
+    <motion.section
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -1733,13 +1772,23 @@ const SectionWrapper = ({ children, className = "" }: { children: React.ReactNod
       className={className}
     >
       {children}
-    </motion.div>
+    </motion.section>
   );
 };
 
 export default function Portfolio() {
   const [isDark, setIsDark] = useState(false);
   const [settings, setSettings] = useState<any>(null);
+  const { lang, t } = useLanguage();
+
+  useEffect(() => {
+    // Dynamic SEO
+    document.title = `Sanjarbek Otabekov | Full-Stack Developer & UI/UX Designer`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', t.hero.description || "Zamonaviy, tezkor va yuqori unumdorlikka ega veb-saytlar va ilovalar yarataman.");
+    }
+  }, [lang, t]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -1803,6 +1852,7 @@ export default function Portfolio() {
 
   return (
     <div className="bg-gradient-to-br from-blue-50/50 via-[#fbfbfd] to-indigo-50/50 dark:from-[#0a0f1c] dark:via-[#050505] dark:to-[#0f0a1c] min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-700 ease-out relative overflow-x-hidden">
+      <CustomCursor />
       <ScrollProgress />
       <BackgroundAnimation />
       
