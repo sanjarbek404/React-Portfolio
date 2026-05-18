@@ -24,7 +24,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }: any) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white dark:bg-[#1d1d1f] rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-gray-100 dark:border-white/10"
+            className="bg-white dark:bg-[#0a0a0a] rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-gray-100 dark:border-white/10"
           >
             <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-2">{title}</h3>
             <p className="text-[#86868b] dark:text-gray-400 mb-6">{message}</p>
@@ -121,15 +121,15 @@ const Dashboard = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/50 dark:bg-[#0a0a0a]/50 backdrop-blur-xl p-6 rounded-[2rem] border border-gray-200/50 dark:border-white/5 shadow-sm">
         <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Dashboard</h2>
-          <p className="text-gray-500 mt-2 font-medium">Sayt statistikasini kuzatib boring</p>
+          <h2 className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Dashboard</h2>
+          <p className="text-gray-500 mt-1 font-medium">Saykingizning umumiy statistikasi</p>
         </div>
         <Link 
           to="/"
           target="_blank"
-          className="flex items-center gap-2 px-6 py-3 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] rounded-xl font-medium transition-transform shadow-lg shadow-black/10"
+          className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-blue-500/20"
         >
           <ExternalLink size={18} />
           <span>Saytni ko'rish</span>
@@ -141,16 +141,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="bg-white dark:bg-[#1d1d1f] p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-white/20 relative overflow-hidden group"
+          className="bg-white dark:bg-[#0a0a0a] p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-white/5 relative overflow-hidden group hover:border-blue-500/30 transition-colors"
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-blue-500/20"></div>
-          <div className="flex items-center gap-4 mb-4 relative z-10">
-            <div className="w-14 h-14 bg-blue-50 dark:bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400">
-              <Eye size={28} />
+          <div className="flex flex-col gap-4 relative z-10">
+            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400">
+              <Eye size={24} />
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Ko'rishlar</p>
-              <h3 className="text-3xl font-black text-[#1d1d1f] dark:text-white">{totals.views}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Jami Ko'rishlar</p>
+              <h3 className="text-4xl font-black text-[#1d1d1f] dark:text-white">{totals.views}</h3>
             </div>
           </div>
         </motion.div>
@@ -159,16 +159,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-white dark:bg-[#1d1d1f] p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-white/20 relative overflow-hidden group"
+          className="bg-white dark:bg-[#0a0a0a] p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-white/5 relative overflow-hidden group hover:border-purple-500/30 transition-colors"
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-purple-500/20"></div>
-          <div className="flex items-center gap-4 mb-4 relative z-10">
-            <div className="w-14 h-14 bg-purple-50 dark:bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-600 dark:text-purple-400">
-              <Users size={28} />
+          <div className="flex flex-col gap-4 relative z-10">
+            <div className="w-12 h-12 bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20 rounded-2xl flex items-center justify-center text-purple-600 dark:text-purple-400">
+              <Users size={24} />
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Tashrifchilar</p>
-              <h3 className="text-3xl font-black text-[#1d1d1f] dark:text-white">{totals.visitors}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Noyob Tashrifchilar</p>
+              <h3 className="text-4xl font-black text-[#1d1d1f] dark:text-white">{totals.visitors}</h3>
             </div>
           </div>
         </motion.div>
@@ -177,16 +177,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-white dark:bg-[#1d1d1f] p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-white/20 relative overflow-hidden group"
+          className="bg-white dark:bg-[#0a0a0a] p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-white/5 relative overflow-hidden group hover:border-emerald-500/30 transition-colors"
         >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-cyan-500/20"></div>
-          <div className="flex items-center gap-4 mb-4 relative z-10">
-            <div className="w-14 h-14 bg-cyan-50 dark:bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-600 dark:text-cyan-400">
-              <BarChart3 size={28} />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-emerald-500/20"></div>
+          <div className="flex flex-col gap-4 relative z-10">
+            <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <BarChart3 size={24} />
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">O'rtacha vaqt</p>
-              <h3 className="text-3xl font-black text-[#1d1d1f] dark:text-white">--</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Faoliyat ko'rsatkichi</p>
+              <h3 className="text-4xl font-black text-[#1d1d1f] dark:text-white">+{(totals.views / (totals.visitors || 1)).toFixed(1)}</h3>
             </div>
           </div>
         </motion.div>
@@ -196,14 +196,20 @@ const Dashboard = () => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-white dark:bg-[#1d1d1f] p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-white/20"
+        className="bg-white dark:bg-[#0a0a0a] p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-white/20"
       >
-        <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-8">Tashriflar statistikasi</h3>
+        <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-8">Tashriflar statistikasi (Ijobiy O'sish)</h3>
         <div className="w-full h-[400px]">
           {loading ? (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">Yuklanmoqda...</div>
+            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-4">
+              <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+              <p>Yuklanmoqda...</p>
+            </div>
           ) : stats.length === 0 ? (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">Hali ma'lumot yo'q</div>
+            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+              <BarChart3 size={48} className="mb-4 opacity-20" />
+              <p>Hali ma'lumot yo'q</p>
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%" minHeight={300} minWidth={1}>
               <AreaChart data={stats} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -221,11 +227,12 @@ const Dashboard = () => {
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#86868b' }} dx={-10} />
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" strokeOpacity={0.1} />
                 <Tooltip 
-                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}
-                  cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '5 5' }}
+                  contentStyle={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', backgroundColor: 'rgba(10, 10, 10, 0.8)', backdropFilter: 'blur(10px)' }}
+                  itemStyle={{ color: '#fff' }}
+                  cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, strokeDasharray: '5 5' }}
                 />
-                <Area type="monotone" dataKey="views" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
-                <Area type="monotone" dataKey="visitors" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorVisitors)" />
+                <Area type="monotone" dataKey="views" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" name="Ko'rishlar" />
+                <Area type="monotone" dataKey="visitors" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorVisitors)" name="Tashrifchilar" />
               </AreaChart>
             </ResponsiveContainer>
           )}
@@ -234,6 +241,23 @@ const Dashboard = () => {
     </motion.div>
   );
 };
+
+const AdminHeader = ({ title, subtitle, isAdding, onToggleAdd, addText = "Yangi qo'shish", icon: Icon }: any) => (
+  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/50 dark:bg-[#0a0a0a]/50 backdrop-blur-xl p-6 rounded-[2rem] border border-gray-200/50 dark:border-white/5 shadow-sm">
+    <div>
+      <h2 className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white">{title}</h2>
+      <p className="text-gray-500 mt-1 font-medium">{subtitle}</p>
+    </div>
+    {onToggleAdd && (
+      <button 
+        onClick={onToggleAdd}
+        className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 w-full md:w-auto justify-center"
+      >
+        {isAdding ? 'Bekor qilish' : <><Plus size={20} /> {addText}</>}
+      </button>
+    )}
+  </div>
+);
 
 const ProjectsManager = () => {
   const [projects, setProjects] = useState<any[]>([]);
@@ -384,18 +408,12 @@ const ProjectsManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Loyihalar</h2>
-          <p className="text-gray-500 mt-2 font-medium">Portfoliodagi loyihalarni boshqarish</p>
-        </div>
-        <button 
-          onClick={() => setIsAdding(!isAdding)}
-          className="bg-[#1d1d1f] dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-black/10"
-        >
-          {isAdding ? 'Bekor qilish' : <><Plus size={20} /> Yangi qo'shish</>}
-        </button>
-      </div>
+      <AdminHeader 
+        title="Loyihalar" 
+        subtitle="Portfoliodagi loyihalarni boshqarish" 
+        isAdding={isAdding} 
+        onToggleAdd={() => setIsAdding(!isAdding)} 
+      />
 
       <AnimatePresence>
         {isAdding && (
@@ -624,24 +642,18 @@ const ExperienceManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Tajriba</h2>
-          <p className="text-gray-500 mt-2 font-medium">Ish tajribasi va faoliyat</p>
-        </div>
-        <button 
-          onClick={() => {
-            setIsAdding(!isAdding);
-            if (isAdding) {
-              setEditingId(null);
-              setFormData({ role: '', company: '', year: '', desc: '' });
-            }
-          }}
-          className="bg-[#1d1d1f] dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-black/10"
-        >
-          {isAdding ? 'Bekor qilish' : <><Plus size={20} /> Yangi qo'shish</>}
-        </button>
-      </div>
+      <AdminHeader 
+        title="Tajriba" 
+        subtitle="Ish tajribasi va faoliyat" 
+        isAdding={isAdding} 
+        onToggleAdd={() => {
+          setIsAdding(!isAdding);
+          if (isAdding) {
+            setEditingId(null);
+            setFormData({ role: '', company: '', year: '', desc: '' });
+          }
+        }} 
+      />
 
       <AnimatePresence>
         {isAdding && (
@@ -776,24 +788,18 @@ const EducationManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Ta'lim</h2>
-          <p className="text-gray-500 mt-2 font-medium">O'qish joylari va darajalar</p>
-        </div>
-        <button 
-          onClick={() => {
-            setIsAdding(!isAdding);
-            if (isAdding) {
-              setEditingId(null);
-              setFormData({ degree: '', institution: '', year: '', desc: '' });
-            }
-          }}
-          className="bg-[#1d1d1f] dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-black/10"
-        >
-          {isAdding ? 'Bekor qilish' : <><Plus size={20} /> Yangi qo'shish</>}
-        </button>
-      </div>
+      <AdminHeader 
+        title="Ta'lim" 
+        subtitle="O'qish joylari va darajalar" 
+        isAdding={isAdding} 
+        onToggleAdd={() => {
+          setIsAdding(!isAdding);
+          if (isAdding) {
+            setEditingId(null);
+            setFormData({ degree: '', institution: '', year: '', desc: '' });
+          }
+        }} 
+      />
 
       <AnimatePresence>
         {isAdding && (
@@ -874,29 +880,75 @@ const EducationManager = () => {
 };
 
 const PRESET_SKILLS = [
-  { name: 'React', slug: 'react' },
-  { name: 'Next.js', slug: 'nextdotjs' },
-  { name: 'Vue.js', slug: 'vuedotjs' },
-  { name: 'Angular', slug: 'angular' },
-  { name: 'Svelte', slug: 'svelte' },
-  { name: 'Node.js', slug: 'nodedotjs' },
-  { name: 'JavaScript', slug: 'javascript' },
-  { name: 'TypeScript', slug: 'typescript' },
-  { name: 'HTML5', slug: 'html5' },
-  { name: 'CSS3', slug: 'css3' },
-  { name: 'Tailwind CSS', slug: 'tailwindcss' },
-  { name: 'Python', slug: 'python' },
-  { name: 'Java', slug: 'java' },
-  { name: 'C++', slug: 'cplusplus' },
-  { name: 'Go', slug: 'go' },
-  { name: 'Docker', slug: 'docker' },
-  { name: 'Kubernetes', slug: 'kubernetes' },
-  { name: 'AWS', slug: 'amazonaws' },
-  { name: 'Firebase', slug: 'firebase' },
-  { name: 'MongoDB', slug: 'mongodb' },
-  { name: 'PostgreSQL', slug: 'postgresql' },
-  { name: 'Git', slug: 'git' },
-  { name: 'Figma', slug: 'figma' },
+  // Frontend
+  { name: 'React', slug: 'react', category: 'Frontend' },
+  { name: 'Next.js', slug: 'nextdotjs', category: 'Frontend' },
+  { name: 'Vue.js', slug: 'vuedotjs', category: 'Frontend' },
+  { name: 'Nuxt.js', slug: 'nuxtdotjs', category: 'Frontend' },
+  { name: 'Angular', slug: 'angular', category: 'Frontend' },
+  { name: 'Svelte', slug: 'svelte', category: 'Frontend' },
+  { name: 'Redux', slug: 'redux', category: 'Frontend' },
+  { name: 'JavaScript', slug: 'javascript', category: 'Frontend' },
+  { name: 'TypeScript', slug: 'typescript', category: 'Frontend' },
+  { name: 'HTML5', slug: 'html5', category: 'Frontend' },
+  { name: 'CSS3', slug: 'css3', category: 'Frontend' },
+  { name: 'Tailwind CSS', slug: 'tailwindcss', category: 'Frontend' },
+  { name: 'Sass', slug: 'sass', category: 'Frontend' },
+  { name: 'Bootstrap', slug: 'bootstrap', category: 'Frontend' },
+  { name: 'Material UI', slug: 'mui', category: 'Frontend' },
+  { name: 'Framer Motion', slug: 'framer', category: 'Frontend' },
+
+  // Backend
+  { name: 'Node.js', slug: 'nodedotjs', category: 'Backend' },
+  { name: 'Express', slug: 'express', category: 'Backend' },
+  { name: 'NestJS', slug: 'nestjs', category: 'Backend' },
+  { name: 'Python', slug: 'python', category: 'Backend' },
+  { name: 'Django', slug: 'django', category: 'Backend' },
+  { name: 'FastAPI', slug: 'fastapi', category: 'Backend' },
+  { name: 'Java', slug: 'java', category: 'Backend' },
+  { name: 'Spring', slug: 'spring', category: 'Backend' },
+  { name: 'C#', slug: 'csharp', category: 'Backend' },
+  { name: 'Dotnet', slug: 'dotnet', category: 'Backend' },
+  { name: 'PHP', slug: 'php', category: 'Backend' },
+  { name: 'Laravel', slug: 'laravel', category: 'Backend' },
+  { name: 'Ruby', slug: 'ruby', category: 'Backend' },
+  { name: 'Ruby on Rails', slug: 'rubyonrails', category: 'Backend' },
+  { name: 'Go', slug: 'go', category: 'Backend' },
+  { name: 'Rust', slug: 'rust', category: 'Backend' },
+  { name: 'C++', slug: 'cplusplus', category: 'Backend' },
+
+  // Database
+  { name: 'MongoDB', slug: 'mongodb', category: 'Database' },
+  { name: 'PostgreSQL', slug: 'postgresql', category: 'Database' },
+  { name: 'MySQL', slug: 'mysql', category: 'Database' },
+  { name: 'SQLite', slug: 'sqlite', category: 'Database' },
+  { name: 'Redis', slug: 'redis', category: 'Database' },
+  { name: 'Firebase', slug: 'firebase', category: 'Database' },
+  { name: 'Supabase', slug: 'supabase', category: 'Database' },
+  { name: 'Prisma', slug: 'prisma', category: 'Database' },
+  { name: 'GraphQL', slug: 'graphql', category: 'Database' },
+
+  // DevOps & Tools
+  { name: 'Docker', slug: 'docker', category: 'DevOps' },
+  { name: 'Kubernetes', slug: 'kubernetes', category: 'DevOps' },
+  { name: 'AWS', slug: 'amazonaws', category: 'DevOps' },
+  { name: 'Google Cloud', slug: 'googlecloud', category: 'DevOps' },
+  { name: 'Vercel', slug: 'vercel', category: 'DevOps' },
+  { name: 'Netlify', slug: 'netlify', category: 'DevOps' },
+  { name: 'GitHub Actions', slug: 'githubactions', category: 'DevOps' },
+  { name: 'Git', slug: 'git', category: 'DevOps' },
+  { name: 'Linux', slug: 'linux', category: 'DevOps' },
+  { name: 'Nginx', slug: 'nginx', category: 'DevOps' },
+
+  // Design & Others
+  { name: 'Figma', slug: 'figma', category: 'Design' },
+  { name: 'Adobe XD', slug: 'adobexd', category: 'Design' },
+  { name: 'Photoshop', slug: 'adobephotoshop', category: 'Design' },
+  { name: 'Illustrator', slug: 'adobeillustrator', category: 'Design' },
+  { name: 'Jest', slug: 'jest', category: 'Tools' },
+  { name: 'Webpack', slug: 'webpack', category: 'Tools' },
+  { name: 'Vite', slug: 'vite', category: 'Tools' },
+  { name: 'Postman', slug: 'postman', category: 'Tools' },
 ];
 
 const SkillsManager = () => {
@@ -956,24 +1008,18 @@ const SkillsManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Ko'nikmalar</h2>
-          <p className="text-gray-500 mt-2 font-medium">Dasturlash tillari va texnologiyalar</p>
-        </div>
-        <button 
-          onClick={() => {
-            setIsAdding(!isAdding);
-            if (isAdding) {
-              setEditingId(null);
-              setFormData({ name: '', level: '50' });
-            }
-          }}
-          className="bg-[#1d1d1f] dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-black/10"
-        >
-          {isAdding ? 'Bekor qilish' : <><Plus size={20} /> Yangi qo'shish</>}
-        </button>
-      </div>
+      <AdminHeader 
+        title="Ko'nikmalar" 
+        subtitle="Dasturlash tillari va texnologiyalar" 
+        isAdding={isAdding} 
+        onToggleAdd={() => {
+          setIsAdding(!isAdding);
+          if (isAdding) {
+            setEditingId(null);
+            setFormData({ name: '', level: '50', iconUrl: '' });
+          }
+        }} 
+      />
 
       <AnimatePresence>
         {isAdding && (
@@ -991,15 +1037,17 @@ const SkillsManager = () => {
               {!editingId && (
                 <div className="mb-8">
                   <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-3 uppercase tracking-wider">Tezkor tanlash (Tayyor iconlar)</label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 dark:bg-[#0a0a0a]/50 rounded-xl border border-gray-100 dark:border-white/5 scrollbar-thin">
                     {PRESET_SKILLS.map(preset => (
                       <button
                         key={preset.slug}
                         type="button"
-                        onClick={() => setFormData({ ...formData, name: preset.name, iconUrl: `https://cdn.simpleicons.org/${preset.slug}` })}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-medium transition-colors text-[#1d1d1f] dark:text-white"
+                        onClick={() => setFormData({ ...formData, name: preset.name, iconUrl: `https://cdn.simpleicons.org/${preset.slug}/000000` })}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-medium transition-colors text-[#1d1d1f] dark:text-white shadow-sm"
                       >
-                        <img src={`https://cdn.simpleicons.org/${preset.slug}`} alt={preset.name} className="w-4 h-4 object-contain" />
+                        <div className="w-5 h-5 flex items-center justify-center bg-gray-100 dark:bg-white/90 rounded-md p-0.5">
+                          <img src={`https://cdn.simpleicons.org/${preset.slug}`} alt={preset.name} className="w-full h-full object-contain" />
+                        </div>
                         {preset.name}
                       </button>
                     ))}
@@ -1162,24 +1210,18 @@ const CertificatesManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Sertifikatlar</h2>
-          <p className="text-gray-500 mt-2 font-medium">Yutuqlar va sertifikatlar</p>
-        </div>
-        <button 
-          onClick={() => {
-            setIsAdding(!isAdding);
-            if (isAdding) {
-              setEditingId(null);
-              setFormData({ title: '', issuer: '', year: '', link: '', image: '' });
-            }
-          }}
-          className="bg-[#1d1d1f] dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-black/10"
-        >
-          {isAdding ? 'Bekor qilish' : <><Plus size={20} /> Yangi qo'shish</>}
-        </button>
-      </div>
+      <AdminHeader 
+        title="Sertifikatlar" 
+        subtitle="Yutuqlar va sertifikatlar" 
+        isAdding={isAdding} 
+        onToggleAdd={() => {
+          setIsAdding(!isAdding);
+          if (isAdding) {
+            setEditingId(null);
+            setFormData({ title: '', issuer: '', year: '', link: '', image: '' });
+          }
+        }} 
+      />
 
       <AnimatePresence>
         {isAdding && (
@@ -1358,24 +1400,18 @@ const ServicesManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Xizmatlar</h2>
-          <p className="text-gray-500 mt-2 font-medium">Taklif etiladigan xizmatlar</p>
-        </div>
-        <button 
-          onClick={() => {
-            setIsAdding(!isAdding);
-            if (isAdding) {
-              setEditingId(null);
-              setFormData({ title: '', desc: '', icon: 'Code' });
-            }
-          }}
-          className="bg-[#1d1d1f] dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-black/10"
-        >
-          {isAdding ? 'Bekor qilish' : <><Plus size={20} /> Yangi qo'shish</>}
-        </button>
-      </div>
+      <AdminHeader 
+        title="Xizmatlar" 
+        subtitle="Taklif etiladigan xizmatlar" 
+        isAdding={isAdding} 
+        onToggleAdd={() => {
+          setIsAdding(!isAdding);
+          if (isAdding) {
+            setEditingId(null);
+            setFormData({ title: '', desc: '', icon: 'Code' });
+          }
+        }} 
+      />
 
       <AnimatePresence>
         {isAdding && (
@@ -1463,8 +1499,8 @@ const SettingsManager = () => {
     aboutTitle: 'Sodda. Kreativ. Samarali.', 
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
-    expYears: '1+', 
-    githubCommits: '100+', 
+    expYears: '3+', 
+    githubCommits: '1.2k', 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
@@ -1575,10 +1611,10 @@ const SettingsManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div>
-        <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Sozlamalar</h2>
-        <p className="text-gray-500 mt-2 font-medium">Sayt sozlamalari va ko'rinishi</p>
-      </div>
+      <AdminHeader 
+        title="Sozlamalar" 
+        subtitle="Sayt sozlamalari va ko'rinishi" 
+      />
 
       <div className="bg-white dark:bg-[#1d1d1f] p-8 rounded-[2rem] shadow-xl shadow-black/5 border border-white/20">
         <div className="flex items-center gap-4 mb-8">
@@ -1777,10 +1813,10 @@ const MessagesManager = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <div>
-        <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Xabarlar</h2>
-        <p className="text-gray-500 mt-2 font-medium">Portfoliodan kelgan xabarlar</p>
-      </div>
+      <AdminHeader 
+        title="Xabarlar" 
+        subtitle="Portfoliodan kelgan xabarlar" 
+      />
 
       <div className="grid grid-cols-1 gap-6">
         {loading ? (
@@ -1867,12 +1903,12 @@ const TranslationsManager = () => {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-8"
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/50 dark:bg-[#0a0a0a]/50 backdrop-blur-xl p-6 rounded-[2rem] border border-gray-200/50 dark:border-white/5 shadow-sm">
         <div>
-          <h2 className="text-4xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Sayt Matnlari (JSON)</h2>
-          <p className="text-gray-500 mt-2 font-medium">Barcha tillardagi sayt matnlarini (jumladan Statistikalar) JSON shaklida tahrirlang.</p>
+          <h2 className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white">Sayt Matnlari (JSON)</h2>
+          <p className="text-gray-500 mt-1 font-medium">Barcha tillardagi sayt matnlarini (jumladan Statistikalar) JSON shaklida tahrirlang.</p>
         </div>
-        <button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 min-w-[150px] text-white px-6 py-3 rounded-full font-bold transition-all shadow-lg flex items-center justify-center">
+        <button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center">
           {saving ? 'Saqlanmoqda...' : 'Saqlash'}
         </button>
       </div>
@@ -1896,6 +1932,7 @@ const TranslationsManager = () => {
 export default function Admin() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!isFirebaseConfigured) {
@@ -1910,6 +1947,10 @@ export default function Admin() {
     });
     return () => unsubscribe && unsubscribe();
   }, [navigate]);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     if (isFirebaseConfigured && auth) {
@@ -1933,81 +1974,93 @@ export default function Admin() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f2f2f7] dark:bg-[#000000] flex flex-col md:flex-row font-sans transition-colors duration-300">
-      {/* Sidebar */}
-      <aside className="w-full md:w-80 bg-[#1d1d1f] text-white flex flex-col md:fixed md:h-[calc(100vh-2rem)] md:m-4 md:rounded-[2rem] z-50 shadow-2xl shadow-black/20 overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay pointer-events-none"></div>
-        
-        <div className="p-8 pb-4 relative z-10">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center font-black text-xl transition-transform">S</div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight">Sanjarbek.</h1>
-              <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold">Admin Panel</p>
-            </div>
-          </Link>
-        </div>
-        
-        <nav className="flex-1 px-4 space-y-1 mt-4 overflow-y-auto scrollbar-hide relative z-10">
-          {navItems.map((item, index) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <motion.div
-                key={item.path}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
+    <div className="min-h-screen bg-[#f8f9fa] dark:bg-[#050505] font-sans selection:bg-blue-500/30">
+      
+      {/* Mobile Topbar */}
+      <div className="md:hidden sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-lg font-black text-lg">S</div>
+          <span className="font-bold text-[#1d1d1f] dark:text-white">Admin Panel</span>
+        </Link>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-white/5 rounded-xl">
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      <div className="flex flex-col md:flex-row">
+        {/* Sidebar overlay for mobile */}
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
+        )}
+
+        {/* Sidebar */}
+        <aside className={`fixed md:sticky top-0 left-0 h-screen w-[280px] bg-white dark:bg-[#0a0a0a] border-r border-gray-200 text-gray-800 dark:text-white dark:border-white/5 flex flex-col z-50 transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+          <div className="p-8 hidden md:block">
+            <Link to="/" className="flex items-center gap-4 group">
+              <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-purple-600 text-white rounded-xl flex items-center justify-center font-black text-xl shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">S</div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight text-[#1d1d1f] dark:text-white">Sanjarbek.</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-semibold mt-0.5">Admin Panel</p>
+              </div>
+            </Link>
+          </div>
+          
+          <nav className="flex-1 px-4 space-y-1.5 mt-8 md:mt-2 overflow-y-auto scrollbar-hide">
+            <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-4">Menyu</div>
+            {navItems.map((item, index) => {
+              const isActive = location.pathname === item.path;
+              return (
                 <Link 
+                  key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all group relative overflow-hidden ${isActive ? 'text-white bg-white/10 shadow-lg shadow-black/10' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all group relative overflow-hidden ${isActive ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                 >
-                  {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full"></div>}
-                  <span className={`relative z-10 transition-transform ${isActive ? 'text-blue-400' : ''}`}>{item.icon}</span>
-                  <span className="relative z-10">{item.label}</span>
+                  {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-500 rounded-r-full"></div>}
+                  <span className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</span>
+                  <span>{item.label}</span>
                 </Link>
-              </motion.div>
-            );
-          })}
-        </nav>
+              );
+            })}
+          </nav>
 
-        <div className="p-4 mt-auto relative z-10 space-y-2">
-          <Link 
-            to="/"
-            className="flex items-center gap-3 px-5 py-4 w-full rounded-2xl font-medium text-white/80 hover:bg-white/10 transition-all hover:text-white"
-          >
-            <Globe size={20} />
-            <span>Saytga qaytish</span>
-          </Link>
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-5 py-4 w-full rounded-2xl font-medium text-red-400 hover:bg-red-500/10 transition-all hover:text-red-300"
-          >
-            <LogOut size={20} />
-            <span>Chiqish</span>
-          </button>
-        </div>
-      </aside>
+          <div className="p-4 mt-auto border-t border-gray-200 dark:border-white/5 space-y-2">
+            <Link 
+              to="/"
+              className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-xl font-medium bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >
+              <Globe size={18} />
+              <span>Saytga qaytish</span>
+            </Link>
+            <button 
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-xl font-medium bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
+            >
+              <LogOut size={18} />
+              <span>Chiqish</span>
+            </button>
+          </div>
+        </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-[22rem] p-6 md:p-8 min-h-screen">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/projects" element={<ProjectsManager />} />
-              <Route path="/services" element={<ServicesManager />} />
-              <Route path="/experience" element={<ExperienceManager />} />
-              <Route path="/education" element={<EducationManager />} />
-              <Route path="/skills" element={<SkillsManager />} />
-              <Route path="/certs" element={<CertificatesManager />} />
-              <Route path="/messages" element={<MessagesManager />} />
-              <Route path="/translations" element={<TranslationsManager />} />
-              <Route path="/settings" element={<SettingsManager />} />
-            </Routes>
-          </AnimatePresence>
-        </div>
-      </main>
+        {/* Main Content */}
+        <main className="flex-1 p-4 md:p-8 min-h-screen max-w-[100vw]">
+          <div className="max-w-[1400px] mx-auto">
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/projects" element={<ProjectsManager />} />
+                <Route path="/services" element={<ServicesManager />} />
+                <Route path="/experience" element={<ExperienceManager />} />
+                <Route path="/education" element={<EducationManager />} />
+                <Route path="/skills" element={<SkillsManager />} />
+                <Route path="/certs" element={<CertificatesManager />} />
+                <Route path="/messages" element={<MessagesManager />} />
+                <Route path="/translations" element={<TranslationsManager />} />
+                <Route path="/settings" element={<SettingsManager />} />
+              </Routes>
+            </AnimatePresence>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
