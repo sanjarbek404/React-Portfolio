@@ -1,5 +1,21 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#1d1d1f"/>
-  <path d="M22 20.5C22 22.5 20.5 24 17 24C13.5 24 12 22.5 12 20.5M12 13.5C12 11.5 13.5 10 17 10C20.5 10 22 11.5 22 13.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M22 13.5C22 15.5 20.5 17 17 17C13.5 17 12 18.5 12 20.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a" />
+      <stop offset="100%" stop-color="#111111" />
+    </linearGradient>
+    <linearGradient id="sgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#3B82F6" flood-opacity="0.4" />
+    </filter>
+  </defs>
+  
+  <rect width="512" height="512" rx="128" fill="url(#bg)" />
+  <rect x="2" y="2" width="508" height="508" rx="126" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+  
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="280" font-weight="900" fill="url(#sgrad)" filter="url(#shadow)">S</text>
 </svg>

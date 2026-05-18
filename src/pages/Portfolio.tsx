@@ -9,7 +9,6 @@ import { useLanguage } from '../lib/LanguageContext';
 
 import { FAQSection } from '../components/FAQSection';
 import { StatsSection } from '../components/StatsSection';
-import { CustomCursor } from '../components/CustomCursor';
 
 const Magnetic = ({ children, className = "", strength = 0.5 }: { children: React.ReactNode, strength?: number, className?: string }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -135,9 +134,9 @@ const Typewriter = ({ text, delay = 0, className = "" }: { text: string, delay?:
 const BackgroundAnimation = () => {
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-      <div className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] rounded-full bg-blue-500/5 blur-[50px] md:bg-blue-500/10 md:blur-[100px] dark:bg-blue-600/5 transition-all duration-700 will-change-transform" />
-      <div className="absolute bottom-[-20%] right-[-20%] w-[70%] h-[70%] rounded-full bg-[#3B82F6]/5 blur-[50px] md:bg-[#3B82F6]/10 md:blur-[100px] dark:bg-[#3B82F6]/5 transition-all duration-700 will-change-transform" />
-      <div className="absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full bg-purple-500/5 blur-[50px] md:bg-purple-500/10 md:blur-[100px] dark:bg-purple-600/5 transition-all duration-700 will-change-transform" />
+      <div className="hidden md:block absolute top-[-20%] left-[-20%] w-[70%] h-[70%] rounded-full md:bg-blue-500/10 md:blur-[100px] dark:bg-blue-600/5 transition-all duration-700" />
+      <div className="hidden md:block absolute bottom-[-20%] right-[-20%] w-[70%] h-[70%] rounded-full md:bg-[#3B82F6]/10 md:blur-[100px] dark:bg-[#3B82F6]/5 transition-all duration-700" />
+      <div className="hidden md:block absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full md:bg-purple-500/10 md:blur-[100px] dark:bg-purple-600/5 transition-all duration-700" />
     </div>
   );
 };
@@ -166,7 +165,7 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -185,8 +184,8 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
       <ThemeTransition isDark={isDark} trigger={themeTrigger} />
       <div className="fixed inset-0 z-[-1] transition-colors duration-500 overflow-hidden">
         <div className="absolute inset-0 bg-dot-pattern [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#3B82F6]/5 md:bg-[#3B82F6]/10 blur-[50px] md:blur-[100px] pointer-events-none will-change-transform"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/5 md:bg-blue-500/10 blur-[50px] md:blur-[100px] pointer-events-none will-change-transform"></div>
+        <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full md:bg-[#3B82F6]/10 md:blur-[100px] pointer-events-none w-0 h-0"></div>
+        <div className="hidden md:block absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full md:bg-blue-500/10 md:blur-[100px] pointer-events-none w-0 h-0"></div>
       </div>
       <motion.nav 
         initial={{ y: -100 }}
@@ -194,7 +193,7 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] md:w-auto`}
       >
-        <div className={`flex justify-between items-center gap-4 md:gap-8 transition-all duration-500 bg-white/70 dark:bg-[#111111]/70 backdrop-blur-xl px-4 md:px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-md`}>
+        <div className={`flex justify-between items-center gap-4 md:gap-8 transition-all duration-500 bg-white/70 dark:bg-[#111111]/70 md:backdrop-blur-xl px-4 md:px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-md`}>
           
             <a href="#" className="text-lg font-bold tracking-tighter text-[#1d1d1f] dark:text-white flex items-center justify-center w-10 h-10">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1d1d1f] dark:text-white">
@@ -357,7 +356,7 @@ const LocalTime = () => {
   }, []);
 
   return (
-    <div className="flex items-center gap-2 text-sm font-mono text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-black/20 px-4 py-2 rounded-full border border-black/5 dark:border-white/5 backdrop-blur-md w-max">
+    <div className="flex items-center gap-2 text-sm font-mono text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-black/20 px-4 py-2 rounded-full border border-black/5 dark:border-white/5 md:backdrop-blur-md w-max">
       <Globe size={14} className="animate-pulse text-blue-500" />
       <span>{location.city}, {location.country}</span>
       <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600 mx-1"></span>
@@ -442,7 +441,7 @@ const Hero = ({ settings }: { settings: any }) => {
             <StaggerContainer delay={0.5}>
               <StaggerItem>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
-                  <div className="flex items-center gap-2 bg-white/60 dark:bg-white/5 backdrop-blur-md text-[#1d1d1f] dark:text-white px-5 py-2.5 rounded-full text-sm font-medium border border-black/5 dark:border-white/5 shadow-sm">
+                  <div className="flex items-center gap-2 bg-white/60 dark:bg-white/5 md:backdrop-blur-md text-[#1d1d1f] dark:text-white px-5 py-2.5 rounded-full text-sm font-medium border border-black/5 dark:border-white/5 shadow-sm">
                     <span className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
@@ -477,7 +476,7 @@ const Hero = ({ settings }: { settings: any }) => {
                   
                   {settings?.resume && (
                     <Magnetic>
-                      <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="group relative overflow-hidden bg-white/50 dark:bg-white/5 backdrop-blur-md text-[#1d1d1f] dark:text-white border border-black/5 dark:border-white/5 px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm hover:bg-white dark:hover:bg-white/10 hover:scale-105 active:scale-95">
+                      <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="group relative overflow-hidden bg-white/50 dark:bg-white/5 md:backdrop-blur-md text-[#1d1d1f] dark:text-white border border-black/5 dark:border-white/5 px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm hover:bg-white dark:hover:bg-white/10 hover:scale-105 active:scale-95">
                         <FileText size={18} className="opacity-70" />
                         {t.hero.cvBtn}
                       </a>
@@ -525,11 +524,11 @@ const Hero = ({ settings }: { settings: any }) => {
             className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0 [transform-style:preserve-3d] will-change-transform"
           >
             {/* Background elements */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/40 via-cyan-400/20 to-purple-500/40 rounded-[3rem] blur-[60px] transform -rotate-6 animate-pulse" style={{ animationDuration: '4s' }}></div>
-            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/40 to-blue-500/40 rounded-full blur-[80px]"></div>
+            <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-blue-500/40 via-cyan-400/20 to-purple-500/40 rounded-[3rem] blur-[60px] transform -rotate-6 animate-pulse" style={{ animationDuration: '4s' }}></div>
+            <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-cyan-400/40 to-blue-500/40 rounded-full blur-[80px]"></div>
             
             {/* Main Image Card */}
-            <div className="relative w-full h-full rounded-[3rem] border border-white/40 dark:border-white/10 shadow-2xl backdrop-blur-md bg-white/10 dark:bg-white/5 p-3 group">
+            <div className="relative w-full h-full rounded-[3rem] border border-white/40 dark:border-white/10 shadow-2xl md:backdrop-blur-md bg-white/10 dark:bg-white/5 p-3 group">
               <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-100 dark:bg-[#0a0a0a] relative ring-1 ring-black/5 dark:ring-white/10">
                 {heroImage ? (
                   <img 
@@ -547,7 +546,7 @@ const Hero = ({ settings }: { settings: any }) => {
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
-                  <span className="text-white font-medium px-6 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Sanjarbek Otabekov</span>
+                  <span className="text-white font-medium px-6 py-2 rounded-full bg-white/20 md:backdrop-blur-md border border-white/20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Sanjarbek Otabekov</span>
                 </div>
               </div>
               
@@ -555,7 +554,7 @@ const Hero = ({ settings }: { settings: any }) => {
               <motion.div 
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -right-6 top-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 backdrop-blur-3xl p-3 sm:p-4 rounded-2xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 flex items-center gap-3 group-hover:translate-x-2 transition-transform"
+                className="absolute -right-6 top-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 md:backdrop-blur-3xl p-3 sm:p-4 rounded-2xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 flex items-center gap-3 group-hover:translate-x-2 transition-transform"
               >
                 <div className="relative flex h-3 w-3">
                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -567,7 +566,7 @@ const Hero = ({ settings }: { settings: any }) => {
               <motion.div 
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -left-6 bottom-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 backdrop-blur-3xl p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 group-hover:-translate-x-2 transition-transform cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                className="absolute -left-6 bottom-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 md:backdrop-blur-3xl p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 group-hover:-translate-x-2 transition-transform cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20"
               >
                 <Code2 size={24} className="text-blue-600 dark:text-blue-400" />
               </motion.div>
@@ -630,7 +629,7 @@ const ScrollToTop = () => {
       }
     };
 
-    window.addEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
@@ -993,7 +992,7 @@ const SkillsAndCerts = () => {
                       y: -5, 
                       scale: 1.02
                     }}
-                    className="bg-white/80 dark:bg-[#111]/80 backdrop-blur-sm p-4 md:p-6 rounded-3xl border border-black/5 dark:border-white/5 shadow-sm flex flex-col items-center justify-center gap-3 md:gap-4 aspect-square transition-all duration-300 hover:shadow-md hover:border-cyan-500/20 group"
+                    className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-sm p-4 md:p-6 rounded-3xl border border-black/5 dark:border-white/5 shadow-sm flex flex-col items-center justify-center gap-3 md:gap-4 aspect-square transition-all duration-300 hover:shadow-md hover:border-cyan-500/20 group"
                   >
                     <div className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 group-hover:bg-cyan-500/10 transition-colors transform translate-z-10">
                       {getSkillIcon(skill.name)}
@@ -1587,7 +1586,7 @@ const Newsletter = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email manzilingiz" 
             required 
-            className="flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/50 px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-md transition-all"
+            className="flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/50 px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 shadow-sm md:backdrop-blur-md transition-all"
           />
           <button 
             type="submit" 
@@ -1728,7 +1727,7 @@ const Contact = ({ settings }: { settings: any }) => {
 const Footer = ({ settings }: { settings: any }) => {
   const { t } = useLanguage();
   return (
-    <footer className="bg-white/80 dark:bg-[#050505]/80 backdrop-blur-3xl py-12 px-6 md:px-12 border-t border-black/5 dark:border-white/10 relative z-10">
+    <footer className="bg-white/80 dark:bg-[#050505]/80 md:backdrop-blur-3xl py-12 px-6 md:px-12 border-t border-black/5 dark:border-white/10 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex flex-col items-center md:items-start gap-2">
           <div className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase flex items-center gap-2">
@@ -1852,7 +1851,6 @@ export default function Portfolio() {
 
   return (
     <div className="bg-gradient-to-br from-blue-50/50 via-[#fbfbfd] to-indigo-50/50 dark:from-[#0a0f1c] dark:via-[#050505] dark:to-[#0f0a1c] min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-700 ease-out relative overflow-x-hidden">
-      <CustomCursor />
       <ScrollProgress />
       <BackgroundAnimation />
       
