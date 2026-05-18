@@ -195,11 +195,8 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
       >
         <div className={`flex justify-between items-center gap-4 md:gap-8 transition-all duration-500 bg-white/70 dark:bg-[#111111]/70 md:backdrop-blur-xl px-4 md:px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-md`}>
           
-            <a href="#" className="text-lg font-bold tracking-tighter text-[#1d1d1f] dark:text-white flex items-center justify-center w-10 h-10">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1d1d1f] dark:text-white">
-                <path d="M17 15.5C17 17.5 15.5 19 12 19C8.5 19 7 17.5 7 15.5M7 8.5C7 6.5 8.5 5 12 5C15.5 5 17 6.5 17 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M17 8.5C17 10.5 15.5 12 12 12C8.5 12 7 13.5 7 15.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <a href="#" className="flex items-center justify-center w-10 h-10 hover:scale-105 transition-transform">
+              <img src="/favicon.svg" alt="Logo" className="w-8 h-8 md:w-9 md:h-9" />
             </a>
           
           
@@ -914,20 +911,30 @@ const BentoGrid = ({ settings }: { settings: any }) => {
   );
 };
 
-const getSkillIcon = (name: string) => {
-  const n = name.toLowerCase();
-  if (n.includes('react')) return <Code className="text-blue-400" size={32} />;
-  if (n.includes('node')) return <Terminal className="text-green-500" size={32} />;
-  if (n.includes('typescript') || n.includes('ts')) return <Code className="text-blue-600" size={32} />;
-  if (n.includes('javascript') || n.includes('js')) return <Code className="text-yellow-400" size={32} />;
-  if (n.includes('next')) return <Zap className="text-black dark:text-white" size={32} />;
-  if (n.includes('tailwind')) return <Layers className="text-cyan-400" size={32} />;
-  if (n.includes('firebase')) return <Database className="text-cyan-500" size={32} />;
-  if (n.includes('mongo')) return <Database className="text-green-600" size={32} />;
-  if (n.includes('design') || n.includes('ui') || n.includes('ux')) return <Palette className="text-pink-500" size={32} />;
-  if (n.includes('git')) return <Github className="text-gray-600" size={32} />;
-  if (n.includes('python')) return <Terminal className="text-blue-500" size={32} />;
-  return <Cpu className="text-purple-500" size={32} />;
+const getSkillIcon = (skill: any) => {
+  if (skill.iconUrl) {
+    return <img src={skill.iconUrl} alt={skill.name} className="w-8 h-8 object-contain" />;
+  }
+  
+  const n = skill.name.toLowerCase();
+  
+  // Custom simpleicons fallback inside Portfolio (if not saved in db)
+  const getSlug = (name: string) => {
+    if (name.includes('react')) return 'react';
+    if (name.includes('node')) return 'nodedotjs';
+    if (name.includes('typescript') || name.includes('ts')) return 'typescript';
+    if (name.includes('javascript') || name.includes('js')) return 'javascript';
+    if (name.includes('next')) return 'nextdotjs';
+    if (name.includes('tailwind')) return 'tailwindcss';
+    if (name.includes('firebase')) return 'firebase';
+    if (name.includes('mongo')) return 'mongodb';
+    if (name.includes('design') || name.includes('ui') || name.includes('ux')) return 'figma';
+    if (name.includes('git')) return 'git';
+    if (name.includes('python')) return 'python';
+    return name.replace(/\s+/g, '');
+  };
+
+  return <img src={`https://cdn.simpleicons.org/${getSlug(n)}`} alt={skill.name} className="w-8 h-8 object-contain" />;
 };
 
 const SkillsAndCerts = () => {
@@ -977,7 +984,7 @@ const SkillsAndCerts = () => {
               >
                 {skills.length > 0 && [...skills, ...skills, ...skills, ...skills].map((skill, idx) => (
                   <div key={idx} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
-                    {getSkillIcon(skill.name)}
+                    {getSkillIcon(skill)}
                     <span className="text-xl font-bold text-[#1d1d1f] dark:text-white whitespace-nowrap">{skill.name}</span>
                   </div>
                 ))}
@@ -995,7 +1002,7 @@ const SkillsAndCerts = () => {
                     className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-sm p-4 md:p-6 rounded-3xl border border-black/5 dark:border-white/5 shadow-sm flex flex-col items-center justify-center gap-3 md:gap-4 aspect-square transition-all duration-300 hover:shadow-md hover:border-cyan-500/20 group"
                   >
                     <div className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 group-hover:bg-cyan-500/10 transition-colors transform translate-z-10">
-                      {getSkillIcon(skill.name)}
+                      {getSkillIcon(skill)}
                     </div>
                     <span className="font-bold text-[#1d1d1f] dark:text-white tracking-tight text-center transform translate-z-5">{skill.name}</span>
                     <div className="w-full bg-gray-100 dark:bg-white/10 h-1.5 rounded-full overflow-hidden mt-2 transform translate-z-5">
@@ -1040,11 +1047,11 @@ const SkillsAndCerts = () => {
                   className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md rounded-3xl border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all overflow-hidden flex flex-col"
                 >
                   {cert.image && (
-                    <div className="w-full h-48 overflow-hidden bg-gray-100 dark:bg-[#0a0a0a]">
+                    <div className="w-full h-48 overflow-hidden bg-gray-50 flex items-center justify-center dark:bg-[#0a0a0a]">
                       <img 
                         src={cert.image} 
                         alt={cert.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                         referrerPolicy="no-referrer"
                       />
                     </div>

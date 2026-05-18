@@ -873,9 +873,35 @@ const EducationManager = () => {
   );
 };
 
+const PRESET_SKILLS = [
+  { name: 'React', slug: 'react' },
+  { name: 'Next.js', slug: 'nextdotjs' },
+  { name: 'Vue.js', slug: 'vuedotjs' },
+  { name: 'Angular', slug: 'angular' },
+  { name: 'Svelte', slug: 'svelte' },
+  { name: 'Node.js', slug: 'nodedotjs' },
+  { name: 'JavaScript', slug: 'javascript' },
+  { name: 'TypeScript', slug: 'typescript' },
+  { name: 'HTML5', slug: 'html5' },
+  { name: 'CSS3', slug: 'css3' },
+  { name: 'Tailwind CSS', slug: 'tailwindcss' },
+  { name: 'Python', slug: 'python' },
+  { name: 'Java', slug: 'java' },
+  { name: 'C++', slug: 'cplusplus' },
+  { name: 'Go', slug: 'go' },
+  { name: 'Docker', slug: 'docker' },
+  { name: 'Kubernetes', slug: 'kubernetes' },
+  { name: 'AWS', slug: 'amazonaws' },
+  { name: 'Firebase', slug: 'firebase' },
+  { name: 'MongoDB', slug: 'mongodb' },
+  { name: 'PostgreSQL', slug: 'postgresql' },
+  { name: 'Git', slug: 'git' },
+  { name: 'Figma', slug: 'figma' },
+];
+
 const SkillsManager = () => {
   const [skills, setSkills] = useState<any[]>([]);
-  const [formData, setFormData] = useState({ name: '', level: '50' });
+  const [formData, setFormData] = useState({ name: '', level: '50', iconUrl: '' });
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -891,7 +917,7 @@ const SkillsManager = () => {
     e.preventDefault();
     if (!formData.name || !formData.level) return;
     try {
-      const data = { name: formData.name, level: parseInt(formData.level) };
+      const data = { name: formData.name, level: parseInt(formData.level), iconUrl: formData.iconUrl || `https://cdn.simpleicons.org/${formData.name.toLowerCase().replace(/\s+/g, '')}` };
       if (editingId) {
         await updateDoc(doc(db, 'skills', editingId), data);
         toast.success("Ko'nikma yangilandi");
@@ -899,7 +925,7 @@ const SkillsManager = () => {
         await addDoc(collection(db, 'skills'), data);
         toast.success("Ko'nikma qo'shildi");
       }
-      setFormData({ name: '', level: '50' });
+      setFormData({ name: '', level: '50', iconUrl: '' });
       setIsAdding(false);
       setEditingId(null);
     } catch (e) {
@@ -908,7 +934,7 @@ const SkillsManager = () => {
   };
 
   const handleEdit = (skill: any) => {
-    setFormData({ name: skill.name, level: String(skill.level) });
+    setFormData({ name: skill.name, level: String(skill.level), iconUrl: skill.iconUrl || '' });
     setEditingId(skill.id);
     setIsAdding(true);
   };
@@ -961,18 +987,46 @@ const SkillsManager = () => {
               <h3 className="text-2xl font-bold mb-8 text-[#1d1d1f] dark:text-white">
                 {editingId ? "Ko'nikmani tahrirlash" : "Yangi ko'nikma qo'shish"}
               </h3>
-              <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-6 items-end">
-                <div className="flex-1 w-full">
-                  <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Nomi</label>
-                  <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="React, Node.js..." />
+              
+              {!editingId && (
+                <div className="mb-8">
+                  <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-3 uppercase tracking-wider">Tezkor tanlash (Tayyor iconlar)</label>
+                  <div className="flex flex-wrap gap-2">
+                    {PRESET_SKILLS.map(preset => (
+                      <button
+                        key={preset.slug}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, name: preset.name, iconUrl: `https://cdn.simpleicons.org/${preset.slug}` })}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-medium transition-colors text-[#1d1d1f] dark:text-white"
+                      >
+                        <img src={`https://cdn.simpleicons.org/${preset.slug}`} alt={preset.name} className="w-4 h-4 object-contain" />
+                        {preset.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="w-full md:w-48">
-                  <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Daraja (%)</label>
-                  <input required type="number" min="0" max="100" value={formData.level} onChange={e => setFormData({...formData, level: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" />
+              )}
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex-1 w-full">
+                    <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Nomi</label>
+                    <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="React, Node.js..." />
+                  </div>
+                  <div className="flex-1 w-full">
+                    <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Icon URL (ixtiyoriy)</label>
+                    <input type="url" value={formData.iconUrl} onChange={e => setFormData({...formData, iconUrl: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="https://... (SVG yoki Png)" />
+                  </div>
+                  <div className="w-full md:w-32">
+                    <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Daraja (%)</label>
+                    <input required type="number" min="0" max="100" value={formData.level} onChange={e => setFormData({...formData, level: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" />
+                  </div>
                 </div>
-                <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-colors w-full md:w-auto h-[58px] shadow-lg shadow-blue-500/30">
-                  {editingId ? "Yangilash" : "Qo'shish"}
-                </button>
+                <div className="flex justify-end">
+                  <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-colors w-full md:w-auto min-w-[200px] shadow-lg shadow-blue-500/30">
+                    {editingId ? "Yangilash" : "Qo'shish"}
+                  </button>
+                </div>
               </form>
             </div>
           </motion.div>
@@ -1409,8 +1463,8 @@ const SettingsManager = () => {
     aboutTitle: 'Sodda. Kreativ. Samarali.', 
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
-    expYears: '3+', 
-    githubCommits: '1.2k', 
+    expYears: '1+', 
+    githubCommits: '100+', 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
