@@ -6,7 +6,7 @@ import { useLanguage } from '../lib/LanguageContext';
 const faqs = [
   {
     kuz: "Siz qanday texnologiyalar bilan ishlaysiz?",
-    en: "What technologies do you work with?",
+    en: "What technologies do you work with?" ,
     ruz: "Men asosan React, TypeScript, Node.js, Tailwind CSS va Firebase bilan ishlayman. Shuningdek, loyiha talabiga ko'ra boshqa zamonaviy vositalarni ham o'zlashtirib keta olaman.",
     ren: "I mainly work with React, TypeScript, Node.js, Tailwind CSS, and Firebase. I can also adapt to other modern tools depending on the project requirements."
   },

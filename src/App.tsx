@@ -36,6 +36,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/cv-builder" element={<CVBuilder />} />
+          
         </Routes>
       </Router>
     </LanguageProvider>
