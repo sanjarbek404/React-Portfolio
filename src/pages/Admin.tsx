@@ -1520,7 +1520,7 @@ const SettingsManager = () => {
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
     expYears: '1+', 
-    githubCommits: '500+, 
+    githubCommits: '500+',
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
