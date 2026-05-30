@@ -1,5 +1,6 @@
 {
   "name": "Sanjarbek Otabekov - Portfolio",
   "description": "Minimalist Apple-style developer portfolio for Sanjarbek Otabekov",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

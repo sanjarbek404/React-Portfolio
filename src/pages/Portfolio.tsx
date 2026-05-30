@@ -10,22 +10,7 @@ import { useLanguage } from '../lib/LanguageContext';
 import { FAQSection } from '../components/FAQSection';
 import { StatsSection } from '../components/StatsSection';
 
-const Magnetic = ({ children, className = "", strength = 0.5 }: { children: React.ReactNode, strength?: number, className?: string }) => {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0);
-  }, []);
 
-  if (isMobile) {
-    return <div className={className}>{children}</div>;
-  }
-
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
-};
 
 const StaggerContainer = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
   return (
@@ -134,9 +119,8 @@ const Typewriter = ({ text, delay = 0, className = "" }: { text: string, delay?:
 const BackgroundAnimation = () => {
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-      <div className="hidden md:block absolute top-[-20%] left-[-20%] w-[70%] h-[70%] rounded-full md:bg-blue-500/10 md:blur-[100px] dark:bg-blue-600/5 transition-all duration-700" />
-      <div className="hidden md:block absolute bottom-[-20%] right-[-20%] w-[70%] h-[70%] rounded-full md:bg-[#3B82F6]/10 md:blur-[100px] dark:bg-[#3B82F6]/5 transition-all duration-700" />
-      <div className="hidden md:block absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full md:bg-purple-500/10 md:blur-[100px] dark:bg-purple-600/5 transition-all duration-700" />
+      <div className="absolute top-[-30%] left-[-30%] w-[100vw] h-[100vw] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.15)_0%,rgba(0,0,0,0)_70%)] dark:bg-[radial-gradient(circle,rgba(37,99,235,0.08)_0%,rgba(0,0,0,0)_70%)] transition-all duration-700" />
+      <div className="absolute bottom-[-30%] right-[-30%] w-[100vw] h-[100vw] rounded-full bg-[radial-gradient(circle,rgba(6,182,212,0.1)_0%,rgba(0,0,0,0)_70%)] dark:bg-[radial-gradient(circle,rgba(6,182,212,0.05)_0%,rgba(0,0,0,0)_70%)] transition-all duration-700" />
     </div>
   );
 };
@@ -182,10 +166,8 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
   return (
     <>
       <ThemeTransition isDark={isDark} trigger={themeTrigger} />
-      <div className="fixed inset-0 z-[-1] transition-colors duration-500 overflow-hidden">
+      <div className="fixed inset-0 z-[-1] transition-colors duration-500 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-dot-pattern [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
-        <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full md:bg-[#3B82F6]/10 md:blur-[100px] pointer-events-none w-0 h-0"></div>
-        <div className="hidden md:block absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full md:bg-blue-500/10 md:blur-[100px] pointer-events-none w-0 h-0"></div>
       </div>
       <motion.nav 
         initial={{ y: -100 }}
@@ -193,68 +175,66 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] md:w-auto`}
       >
-        <div className={`flex justify-between items-center gap-4 md:gap-8 transition-all duration-500 bg-white/70 dark:bg-[#111111]/70 md:backdrop-blur-xl px-4 md:px-6 py-3 rounded-full border border-black/5 dark:border-white/10 shadow-md`}>
+        <div className={`flex justify-between items-center gap-3 transition-all duration-500 bg-white/70 dark:bg-[#111111]/80 backdrop-blur-md px-4 md:px-6 py-2.5 md:py-3 rounded-full border border-black/5 dark:border-white/10 shadow-lg`}>
           
-            <a href="#" className="flex items-center justify-center w-10 h-10 hover:scale-105 transition-transform">
-              <img src="/favicon.svg" alt="Logo" className="w-8 h-8 md:w-9 md:h-9" />
+            <a href="#" className="flex items-center justify-center w-9 h-9 hover:scale-105 transition-transform shrink-0">
+              <img src="/favicon.svg" alt="Logo" className="w-8 h-8" />
             </a>
           
           
           <div className="hidden md:flex items-center p-1.5 space-x-1 bg-black/5 dark:bg-white/5 rounded-full">
-            <Magnetic strength={0.15}>
+            
               <a href="#about" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.about}</a>
-            </Magnetic>
-            <Magnetic strength={0.15}>
+            
+            
               <a href="#skills" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.skills}</a>
-            </Magnetic>
-            <Magnetic strength={0.15}>
+            
+            
               <a href="#projects" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.projects}</a>
-            </Magnetic>
-            <Magnetic strength={0.15}>
+            
+            
               <a href="#experience" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">{t.nav.experience}</a>
-            </Magnetic>
-            <Magnetic strength={0.15}>
+            
+            
               <Link to="/cv-builder" className="px-5 py-2 rounded-full hover:bg-white dark:hover:bg-white/10 hover:shadow-sm text-sm font-medium flex items-center justify-center gap-1.5 text-[#86868b] hover:text-[#1d1d1f] dark:text-white/70 dark:hover:text-white transition-all">
                 <FileText size={14}/> {t.nav.cv}
               </Link>
-            </Magnetic>
+            
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             
             <div className="relative group">
-              <button aria-label="Tilni tanlash" className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5">
-                <span className="text-lg">{lang === 'UZ' ? '🇺🇿' : lang === 'RU' ? '🇷🇺' : '🇺🇸'}</span>
-                <span className="text-xs font-black text-[#1d1d1f] dark:text-white uppercase hidden sm:inline">{lang}</span>
-                <ArrowRight size={12} className="rotate-90 text-gray-400" />
+              <button aria-label="Tilni tanlash" className="flex items-center gap-1 bg-black/5 dark:bg-white/5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5">
+                <span className="text-base sm:text-lg">{lang === 'UZ' ? 'UZ' : lang === 'RU' ? 'RU' : 'EN'}</span>
+                <ArrowRight size={12} className="rotate-90 text-gray-500 hidden sm:block" />
               </button>
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-[#1d1d1f] rounded-2xl shadow-2xl border border-black/5 dark:border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-[60] overflow-hidden p-2">
+              <div className="absolute top-full right-0 mt-2 w-40 bg-white dark:bg-[#1d1d1f] rounded-2xl shadow-2xl border border-black/5 dark:border-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-[60] overflow-hidden p-2">
                 {languages.map((l) => (
                   <button 
                     key={l}
                     aria-label={`${l} tiliga o'zgartirish`}
                     onClick={() => setLang(l as any)} 
-                    className={`w-full text-left px-4 py-3 text-sm font-bold transition-all flex items-center gap-3 rounded-xl ${lang === l ? 'bg-black/5 dark:bg-white/5 text-[#1d1d1f] dark:text-white' : 'text-gray-500 hover:bg-black/5 dark:hover:bg-white/5 hover:text-[#1d1d1f] dark:hover:text-white'}`}
+                    className={`w-full text-left px-4 py-2 text-sm font-bold transition-all flex items-center gap-2 rounded-xl ${lang === l ? 'bg-black/5 dark:bg-white/5 text-[#1d1d1f] dark:text-white' : 'text-gray-500 hover:bg-black/5 dark:hover:bg-white/5 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                   >
-                    <span className="text-xl">{l === 'UZ' ? '🇺🇿' : l === 'RU' ? '🇷🇺' : '🇺🇸'}</span>
-                    <span>{l === 'UZ' ? "O'zbekcha" : l === 'RU' ? "Русский" : "English"}</span>
+                    <span>{l === 'UZ' ? '🇺🇿 UZ' : l === 'RU' ? '🇷🇺 RU' : '🇺🇸 EN'}</span>
                     {lang === l && <Check size={14} className="ml-auto text-blue-500" />}
                   </button>
                 ))}
               </div>
             </div>
 
-              <button aria-label="Mavzuni o'zgartirish" onClick={handleThemeToggle} className="p-2.5 rounded-full text-[#1d1d1f] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+              <button aria-label="Mavzuni o'zgartirish" onClick={handleThemeToggle} className="p-2 rounded-full text-[#1d1d1f] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             
             
-              <Link aria-label="Admin panelga o'tish" to="/admin" className="p-2.5 rounded-full text-gray-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors flex items-center justify-center" title="Admin Panel">
+              <Link aria-label="Admin panelga o'tish" to="/admin" className="hidden sm:flex p-2 rounded-full text-gray-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors items-center justify-center" title="Admin Panel">
                 <Lock size={18} />
               </Link>
             
             
-              <a href="#contact" className="text-xs font-bold uppercase tracking-wider bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] px-5 py-2.5 rounded-full transition-transform flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+              <a href="#contact" className="hidden sm:flex text-xs font-bold uppercase tracking-wider bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] px-5 py-2.5 rounded-full transition-transform items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap ml-1">
                 {t.nav.contact}
               </a>
             
@@ -262,7 +242,7 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
             {/* Mobile Menu Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-full text-[#1d1d1f] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+              className="md:hidden p-2 rounded-full text-[#1d1d1f] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors relative z-[60] ml-1"
             >
               <div className="w-5 h-4 flex flex-col justify-between">
                 <span className={`w-full h-0.5 bg-current transition-transform origin-left ${isMobileMenuOpen ? 'rotate-45 translate-x-px' : ''}`} />
@@ -278,17 +258,18 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl pt-32 px-6 md:hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-white dark:bg-[#0a0a0a] pt-24 pb-10 px-6 md:hidden flex flex-col justify-between"
           >
-            <div className="flex flex-col gap-6 text-center">
+            <div className="flex flex-col gap-4 text-center flex-1 justify-center max-w-sm mx-auto w-full">
               {[
-                { href: "#about", label: t.nav.about },
-                { href: "#skills", label: t.nav.skills },
-                { href: "#projects", label: t.nav.projects },
-                { href: "#experience", label: t.nav.experience },
+                { href: "#about", label: t.nav.about, icon: <User size={20} /> },
+                { href: "#skills", label: t.nav.skills, icon: <Zap size={20} /> },
+                { href: "#projects", label: t.nav.projects, icon: <Briefcase size={20} /> },
+                { href: "#experience", label: t.nav.experience, icon: <Award size={20} /> },
               ].map((item, i) => (
                 <motion.a 
                   key={i}
@@ -297,31 +278,53 @@ const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () =
                   transition={{ delay: 0.1 + i * 0.1 }}
                   href={item.href} 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white hover:text-blue-500 transition-colors"
+                  className="flex items-center justify-between gap-4 text-xl font-bold tracking-tight text-[#1d1d1f] dark:text-white hover:text-blue-500 transition-colors p-4 rounded-[2rem] bg-gray-50 dark:bg-white/5 active:scale-95 border border-black/5 dark:border-white/5"
                 >
-                  {item.label}
+                  <span className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white dark:bg-black/20 flex items-center justify-center text-blue-500 shadow-sm shrink-0">
+                      {item.icon}
+                    </div>
+                    {item.label}
+                  </span>
+                  <ArrowRight size={18} className="text-gray-400" />
                 </motion.a>
               ))}
+              
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
+                className="pt-4"
               >
-                <Link to="/cv-builder" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white hover:text-blue-500 transition-colors flex items-center justify-center gap-3">
-                  <FileText size={28} className="text-blue-500" /> {t.nav.cv}
+                <Link to="/cv-builder" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between gap-4 text-xl font-bold tracking-tight text-[#1d1d1f] dark:text-white hover:text-blue-500 transition-colors p-4 rounded-[2rem] bg-blue-50 dark:bg-blue-500/10 active:scale-95 border border-blue-100 dark:border-blue-500/20">
+                  <span className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-500/30 shrink-0">
+                      <FileText size={20} />
+                    </div>
+                    {t.nav.cv}
+                  </span>
+                  <ArrowRight size={18} className="text-blue-500" />
                 </Link>
               </motion.div>
-              <motion.a 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 }}
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex justify-between items-center mt-6 pt-6 border-t border-black/5 dark:border-white/10 max-w-sm mx-auto w-full"
+            >
+              <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="w-14 h-14 rounded-full bg-gray-50 dark:bg-white/5 text-[#1d1d1f] dark:text-gray-300 hover:text-white hover:bg-blue-500 transition-colors flex items-center justify-center shadow-sm border border-black/5 dark:border-white/5">
+                <Lock size={20} />
+              </Link>
+              <a 
                 href="#contact" 
                 onClick={() => setIsMobileMenuOpen(false)} 
-                className="mt-8 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] px-10 py-4 rounded-full font-bold uppercase tracking-wider mx-auto shadow-xl flex items-center gap-2"
+                className="flex-1 ml-4 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] h-14 rounded-full font-bold uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all text-sm"
               >
-                {t.nav.contact} <ArrowRight size={18} />
-              </motion.a>
-            </div>
+                {t.nav.contact} <ArrowRight size={16} />
+              </a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -353,7 +356,7 @@ const LocalTime = () => {
   }, []);
 
   return (
-    <div className="flex items-center gap-2 text-sm font-mono text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-black/20 px-4 py-2 rounded-full border border-black/5 dark:border-white/5 md:backdrop-blur-md w-max">
+    <div className="flex items-center gap-2 text-sm font-mono text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-black/20 px-4 py-2 rounded-full border border-black/5 dark:border-white/5 w-max">
       <Globe size={14} className="animate-pulse text-blue-500" />
       <span>{location.city}, {location.country}</span>
       <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600 mx-1"></span>
@@ -383,28 +386,6 @@ const Hero = ({ settings }: { settings: any }) => {
   }, []);
 
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -50]);
-
-  // 3D Tilt Effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useTransform(mouseY, [-400, 400], [10, -10]);
-  const rotateY = useTransform(mouseX, [-400, 400], [-10, 10]);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isMobile) return;
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    mouseX.set(clientX - innerWidth / 2);
-    mouseY.set(clientY - innerHeight / 2);
-  };
-
-  const handleMouseLeave = () => {
-    if (isMobile) return;
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   useEffect(() => {
     if (isFirebaseConfigured && db) {
@@ -428,17 +409,15 @@ const Hero = ({ settings }: { settings: any }) => {
 
   return (
     <section 
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto min-h-[90vh] flex flex-col justify-center overflow-hidden [perspective:1000px]"
+      className="relative pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto min-h-[90vh] flex flex-col justify-center overflow-hidden"
     >
       <div className="w-full relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          <motion.div style={isMobile ? {} : { y: y1 }} className="flex-1 flex flex-col items-start text-left w-full will-change-transform">
+          <motion.div className="flex-1 flex flex-col items-start text-left w-full">
             <StaggerContainer delay={0.5}>
               <StaggerItem>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
-                  <div className="flex items-center gap-2 bg-white/60 dark:bg-white/5 md:backdrop-blur-md text-[#1d1d1f] dark:text-white px-5 py-2.5 rounded-full text-sm font-medium border border-black/5 dark:border-white/5 shadow-sm">
+                  <div className="flex items-center gap-2 bg-white/60 dark:bg-white/5 text-[#1d1d1f] dark:text-white px-5 py-2.5 rounded-full text-sm font-medium border border-black/5 dark:border-white/5 shadow-sm">
                     <span className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
@@ -464,48 +443,48 @@ const Hero = ({ settings }: { settings: any }) => {
 
               <StaggerItem>
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center mt-10">
-                  <Magnetic>
+                  
                     <a href="#projects" className="group relative overflow-hidden bg-blue-600 dark:bg-blue-500 text-white px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 active:scale-95">
                       {t.hero.projectsBtn}
                       <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                  </Magnetic>
+                  
                   
                   {settings?.resume && (
-                    <Magnetic>
-                      <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="group relative overflow-hidden bg-white/50 dark:bg-white/5 md:backdrop-blur-md text-[#1d1d1f] dark:text-white border border-black/5 dark:border-white/5 px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm hover:bg-white dark:hover:bg-white/10 hover:scale-105 active:scale-95">
+                    
+                      <a href={settings.resume} target="_blank" rel="noreferrer" download={settings.resume.startsWith('/') ? true : undefined} className="group relative overflow-hidden bg-white/50 dark:bg-white/5 text-[#1d1d1f] dark:text-white border border-black/5 dark:border-white/5 px-8 py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm hover:bg-white dark:hover:bg-white/10 hover:scale-105 active:scale-95">
                         <FileText size={18} className="opacity-70" />
                         {t.hero.cvBtn}
                       </a>
-                    </Magnetic>
+                    
                   )}
                   
                   <div className="flex justify-center gap-4 ml-0 sm:ml-4">
-                    <Magnetic strength={0.2}>
+                    
                       <button onClick={handleCopyEmail} className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all hover:border-blue-500/30" title="Email nusxalash">
                         {copied ? <Check size={20} className="text-green-500" /> : <Mail size={20} />}
                       </button>
-                    </Magnetic>
+                    
                     {settings?.github && (
-                      <Magnetic strength={0.2}>
+                      
                         <a href={settings.github} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all hover:border-blue-500/30">
                           <Github size={20} />
                         </a>
-                      </Magnetic>
+                      
                     )}
                     {settings?.linkedin && (
-                      <Magnetic strength={0.2}>
+                      
                         <a href={settings.linkedin} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all hover:border-blue-500/30">
                           <Linkedin size={20} />
                         </a>
-                      </Magnetic>
+                      
                     )}
                     {settings?.telegram && (
-                      <Magnetic strength={0.2}>
+                      
                         <a href={settings.telegram} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all hover:border-blue-500/30">
                           <Send size={20} />
                         </a>
-                      </Magnetic>
+                      
                     )}
                   </div>
                 </div>
@@ -514,18 +493,17 @@ const Hero = ({ settings }: { settings: any }) => {
           </motion.div>
 
           <motion.div
-            style={isMobile ? {} : { y: y2, rotateX, rotateY }}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0 [transform-style:preserve-3d] will-change-transform"
+            className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0"
           >
             {/* Background elements */}
             <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-blue-500/40 via-cyan-400/20 to-purple-500/40 rounded-[3rem] blur-[60px] transform -rotate-6 animate-pulse" style={{ animationDuration: '4s' }}></div>
             <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-cyan-400/40 to-blue-500/40 rounded-full blur-[80px]"></div>
             
             {/* Main Image Card */}
-            <div className="relative w-full h-full rounded-[3rem] border border-white/40 dark:border-white/10 shadow-2xl md:backdrop-blur-md bg-white/10 dark:bg-white/5 p-3 group">
+            <div className="relative w-full h-full rounded-[3rem] border border-white/40 dark:border-white/10 shadow-2xl bg-white/10 dark:bg-white/5 p-3 group">
               <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-100 dark:bg-[#0a0a0a] relative ring-1 ring-black/5 dark:ring-white/10">
                 {heroImage ? (
                   <img 
@@ -543,7 +521,7 @@ const Hero = ({ settings }: { settings: any }) => {
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
-                  <span className="text-white font-medium px-6 py-2 rounded-full bg-white/20 md:backdrop-blur-md border border-white/20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Sanjarbek Otabekov</span>
+                  <span className="text-white font-medium px-6 py-2 rounded-full bg-white/20 border border-white/20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Sanjarbek Otabekov</span>
                 </div>
               </div>
               
@@ -551,7 +529,7 @@ const Hero = ({ settings }: { settings: any }) => {
               <motion.div 
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -right-6 top-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 md:backdrop-blur-3xl p-3 sm:p-4 rounded-2xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 flex items-center gap-3 group-hover:translate-x-2 transition-transform"
+                className="absolute -right-6 top-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 p-3 sm:p-4 rounded-2xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 flex items-center gap-3 group-hover:translate-x-2 transition-transform"
               >
                 <div className="relative flex h-3 w-3">
                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -563,7 +541,7 @@ const Hero = ({ settings }: { settings: any }) => {
               <motion.div 
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -left-6 bottom-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 md:backdrop-blur-3xl p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 group-hover:-translate-x-2 transition-transform cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                className="absolute -left-6 bottom-1/4 bg-white/90 dark:bg-[#1d1d1f]/90 p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xl shadow-black/5 dark:shadow-blue-900/20 border border-white/50 dark:border-white/10 z-30 group-hover:-translate-x-2 transition-transform cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20"
               >
                 <Code2 size={24} className="text-blue-600 dark:text-blue-400" />
               </motion.div>
@@ -646,7 +624,7 @@ const ScrollToTop = () => {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[90]"
         >
-          <Magnetic strength={0.3}>
+          
             <button
               onClick={scrollToTop}
               className="w-14 h-14 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all hover:bg-blue-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] hover:-translate-y-1 active:scale-95 z-[90]"
@@ -654,7 +632,7 @@ const ScrollToTop = () => {
             >
               <ArrowUpRight className="-rotate-45" size={24} />
             </button>
-          </Magnetic>
+          
         </motion.div>
       )}
     </AnimatePresence>
@@ -663,14 +641,6 @@ const ScrollToTop = () => {
 
 const BentoCard = ({ children, className, delay = 0, title, fullContent }: { children: React.ReactNode, className?: string, delay?: number, title?: string, fullContent?: React.ReactNode }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
 
   return (
     <>
@@ -678,22 +648,10 @@ const BentoCard = ({ children, className, delay = 0, title, fullContent }: { chi
         <motion.div 
           layoutId={`card-${title}`}
           onClick={() => fullContent && setIsExpanded(true)}
-          onMouseMove={handleMouseMove}
           whileHover={{ y: -5 }}
-          className={`h-full bg-white/70 dark:bg-black/30 md:backdrop-blur-xl rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-black/5 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 ${fullContent ? 'cursor-pointer' : ''}`}
+          className={`h-full bg-white/70 dark:bg-black/30 rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-black/5 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 ${fullContent ? 'cursor-pointer' : ''}`}
         >
-          <motion.div
-            className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 z-0"
-            style={{
-              background: useMotionTemplate`
-                radial-gradient(
-                  400px circle at ${mouseX}px ${mouseY}px,
-                  rgba(59, 130, 246, 0.15),
-                  transparent 80%
-                )
-              `,
-            }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:to-blue-500/10 transition-colors duration-500" />
           <div className="relative z-10 w-full h-full flex flex-col justify-between">
             {children}
           </div>
@@ -999,7 +957,7 @@ const SkillsAndCerts = () => {
                       y: -5, 
                       scale: 1.02
                     }}
-                    className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-sm p-4 md:p-6 rounded-3xl border border-black/5 dark:border-white/5 shadow-sm flex flex-col items-center justify-center gap-3 md:gap-4 aspect-square transition-all duration-300 hover:shadow-md hover:border-cyan-500/20 group"
+                    className="bg-white/80 dark:bg-[#111]/80 p-4 md:p-6 rounded-3xl border border-black/5 dark:border-white/5 shadow-sm flex flex-col items-center justify-center gap-3 md:gap-4 aspect-square transition-all duration-300 hover:shadow-md hover:border-cyan-500/20 group"
                   >
                     <div className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 group-hover:bg-cyan-500/10 transition-colors transform translate-z-10">
                       {getSkillIcon(skill)}
@@ -1044,7 +1002,7 @@ const SkillsAndCerts = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md rounded-3xl border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all overflow-hidden flex flex-col"
+                  className="bg-white/80 dark:bg-[#111]/80 rounded-3xl border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all overflow-hidden flex flex-col"
                 >
                   {cert.image && (
                     <div className="w-full h-48 overflow-hidden bg-gray-50 flex items-center justify-center dark:bg-[#0a0a0a]">
@@ -1112,7 +1070,7 @@ const ServicesSection = () => {
             <StaggerItem key={service.id}>
               <motion.div 
                 whileHover={{ y: -10 }}
-                className="bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md p-10 rounded-[2rem] border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all duration-500 shadow-sm hover:shadow-2xl"
+                className="bg-white/80 dark:bg-[#111]/80 p-10 rounded-[2rem] border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all duration-500 shadow-sm hover:shadow-2xl"
               >
                 <div className="flex justify-between items-start mb-8">
                   <div className="text-[#1d1d1f] dark:text-white transition-colors group-hover:text-[#3B82F6] group-hover:scale-110 duration-500">
@@ -1201,7 +1159,7 @@ const GithubContributionGraph = () => {
         
         <div className="bg-white dark:bg-[#0d1117] p-8 rounded-[2rem] border border-black/5 dark:border-white/10 shadow-lg overflow-x-auto custom-scrollbar relative">
           {loading && (
-             <div className="absolute inset-0 z-10 bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-sm flex items-center justify-center rounded-[2rem]">
+             <div className="absolute inset-0 z-10 bg-white/80 dark:bg-[#0d1117]/80 flex items-center justify-center rounded-[2rem]">
                 <div className="flex flex-col items-center gap-3">
                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                    <span className="text-sm font-medium text-gray-500">Faollik yuklanmoqda...</span>
@@ -1227,17 +1185,13 @@ const GithubContributionGraph = () => {
               </div>
               <div className="flex gap-1.5">
                 {data.map((week, wIndex) => (
-                  <div key={wIndex} className="flex flex-col gap-1.5">
+                  <div key={wIndex} className="flex flex-col gap-1.5 fade-in-week" style={{ animationDelay: `${(wIndex % 10) * 0.05}s` }}>
                     {week.map((level, dIndex) => (
-                      <motion.div
+                      <div
                         key={`${wIndex}-${dIndex}`}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: (wIndex % 10) * 0.05 + dIndex * 0.02 }}
-                        className={`w-3 h-3 rounded-[2px] ${getColor(level)} transition-colors duration-300 hover:ring-2 hover:ring-white dark:hover:ring-black cursor-crosshair`}
+                        className={`w-3 h-3 rounded-[2px] ${getColor(level)} transition-colors hover:ring-2 hover:ring-gray-300 dark:hover:ring-gray-600 cursor-crosshair`}
                         title={level > 0 ? `Activity level: ${level}` : 'No activity'}
-                      ></motion.div>
+                      ></div>
                     ))}
                   </div>
                 ))}
@@ -1290,7 +1244,7 @@ const WorkflowSection = () => {
                 <StaggerItem key={step.id}>
                   <motion.div 
                     whileHover={{ y: -5 }}
-                    className="relative z-10 bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md p-8 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl group"
+                    className="relative z-10 bg-white/80 dark:bg-[#111]/80 p-8 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl group"
                   >
                     <div className="text-5xl font-display font-bold text-black/5 dark:text-white/5 mb-6 group-hover:text-[#3B82F6]/10 transition-colors">{step.id}</div>
                     <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-3 tracking-tight">{stepData.title}</h3>
@@ -1384,7 +1338,7 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                   key={project.id}
-                  className="bg-white/70 dark:bg-black/30 md:backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5"
+                  className="bg-white/70 dark:bg-black/30 rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5"
                 >
                   {/* Floating Tag */}
                   <div className="absolute top-6 right-6 z-20 bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold text-[10px] shadow-lg uppercase tracking-wider">
@@ -1446,7 +1400,7 @@ const TestimonialsSection = () => {
              <StaggerItem key={i}>
                <motion.div 
                 whileHover={{ y: -10 }}
-                className="h-full bg-white/80 dark:bg-[#111]/80 md:backdrop-blur-md p-10 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl"
+                className="h-full bg-white/80 dark:bg-[#111]/80 p-10 rounded-[2rem] border border-black/5 dark:border-white/5 transition-all duration-500 shadow-sm hover:shadow-xl"
               >
                 <div className="flex gap-1 text-yellow-400 mb-8">
                   {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
@@ -1593,7 +1547,7 @@ const Newsletter = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email manzilingiz" 
             required 
-            className="flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/50 px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 shadow-sm md:backdrop-blur-md transition-all"
+            className="flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/50 px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 shadow-sm transition-all"
           />
           <button 
             type="submit" 
@@ -1712,7 +1666,7 @@ const Contact = ({ settings }: { settings: any }) => {
                 </div>
               </StaggerItem>
               <StaggerItem>
-                <Magnetic>
+                
                   <button type="submit" disabled={loading} className="flex items-center gap-6 text-2xl font-medium transition-all group mt-12 disabled:opacity-50">
                     <span className="w-16 h-16 rounded-full bg-[#3B82F6] text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-blue-500/50 transition-all duration-300">
                       <ArrowUpRight size={32} className="group-hover:rotate-45 transition-transform duration-300" />
@@ -1721,7 +1675,7 @@ const Contact = ({ settings }: { settings: any }) => {
                       {loading ? 'Yuborilmoqda...' : 'Yuborish'}
                     </span>
                   </button>
-                </Magnetic>
+                
               </StaggerItem>
             </StaggerContainer>
           </form>
@@ -1734,7 +1688,7 @@ const Contact = ({ settings }: { settings: any }) => {
 const Footer = ({ settings }: { settings: any }) => {
   const { t } = useLanguage();
   return (
-    <footer className="bg-white/80 dark:bg-[#050505]/80 md:backdrop-blur-3xl py-12 px-6 md:px-12 border-t border-black/5 dark:border-white/10 relative z-10">
+    <footer className="bg-white/80 dark:bg-[#050505]/80 py-12 px-6 md:px-12 border-t border-black/5 dark:border-white/10 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex flex-col items-center md:items-start gap-2">
           <div className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase flex items-center gap-2">
@@ -1857,7 +1811,7 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-blue-50/50 via-[#fbfbfd] to-indigo-50/50 dark:from-[#0a0f1c] dark:via-[#050505] dark:to-[#0f0a1c] min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-700 ease-out relative overflow-x-hidden">
+    <div className="min-h-screen font-sans selection:bg-blue-500 selection:text-white transition-colors duration-700 ease-out relative overflow-x-hidden">
       <ScrollProgress />
       <BackgroundAnimation />
       

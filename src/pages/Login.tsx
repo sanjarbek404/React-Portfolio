@@ -62,7 +62,7 @@ export default function Login() {
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
       
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-2xl rounded-[2rem] p-10 shadow-2xl border border-white/10 relative z-10">
+      <div className="w-full max-w-md bg-white/5  rounded-[2rem] p-10 shadow-2xl border border-white/10 relative z-10">
         <div className="text-center mb-10">
           <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-blue-500/20 rotate-3 hover:rotate-6 transition-transform duration-300">
             <ShieldCheck size={40} />

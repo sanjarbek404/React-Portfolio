@@ -3,15 +3,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import Portfolio from './pages/Portfolio';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
-import CVBuilder from './pages/CVBuilder';
 import { LanguageProvider } from './lib/LanguageContext';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
+
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Login = lazy(() => import('./pages/Login'));
+const Admin = lazy(() => import('./pages/Admin'));
+const CVBuilder = lazy(() => import('./pages/CVBuilder'));
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#f4f7fe] dark:bg-[#050505]">
+    <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+  </div>
+);
 
 export default function App() {
   return (
@@ -29,15 +36,26 @@ export default function App() {
               fontSize: '14px',
               fontWeight: '500'
             },
+            success: {
+              style: {
+                background: '#22c55e',
+              }
+            },
+            error: {
+              style: {
+                background: '#ef4444',
+              }
+            }
           }}
         />
-        <Routes>
-          <Route path="/" element={<Portfolio />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin/*" element={<Admin />} />
-          <Route path="/cv-builder" element={<CVBuilder />} />
-          
-        </Routes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Portfolio />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin/*" element={<Admin />} />
+            <Route path="/cv-builder" element={<CVBuilder />} />
+          </Routes>
+        </Suspense>
       </Router>
     </LanguageProvider>
   );

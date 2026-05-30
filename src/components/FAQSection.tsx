@@ -6,7 +6,7 @@ import { useLanguage } from '../lib/LanguageContext';
 const faqs = [
   {
     kuz: "Siz qanday texnologiyalar bilan ishlaysiz?",
-    en: "What technologies do you work with?" ,
+    en: "What technologies do you work with?",
     ruz: "Men asosan React, TypeScript, Node.js, Tailwind CSS va Firebase bilan ishlayman. Shuningdek, loyiha talabiga ko'ra boshqa zamonaviy vositalarni ham o'zlashtirib keta olaman.",
     ren: "I mainly work with React, TypeScript, Node.js, Tailwind CSS, and Firebase. I can also adapt to other modern tools depending on the project requirements."
   },
@@ -97,7 +97,7 @@ export const FAQSection = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setOpenIndex(isOpen ? null : index)}
-                className={`bg-white/80 dark:bg-[#111]/80 backdrop-blur-md rounded-2xl md:rounded-3xl border transition-all duration-300 overflow-hidden cursor-pointer ${isOpen ? 'border-blue-500 shadow-lg shadow-blue-500/10' : 'border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10'}`}
+                className={`bg-white/80 dark:bg-[#111]/80 rounded-2xl md:rounded-3xl border transition-all duration-300 overflow-hidden cursor-pointer ${isOpen ? 'border-blue-500 shadow-lg shadow-blue-500/10' : 'border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10'}`}
               >
                 <div className="p-6 md:p-8 flex justify-between items-center gap-4">
                   <h3 className={`text-lg md:text-xl font-bold transition-colors ${isOpen ? 'text-blue-600 dark:text-blue-400' : 'text-[#1d1d1f] dark:text-white'}`}>

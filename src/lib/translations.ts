@@ -63,7 +63,7 @@ export const translations = {
       viewCertificate: "Sertifikatni ko'rish",
       noCertificates: "Hali sertifikatlar qo'shilmagan."
     },
-    contact: {
+    contactForm: {
       title: "Bog'lanish",
       subtitle: "Loyihangiz bormi? Keling, gaplashamiz!",
       name: "Ismingiz",
@@ -177,7 +177,7 @@ export const translations = {
       viewCertificate: "Посмотреть сертификат",
       noCertificates: "Сертификаты еще не добавлены."
     },
-    contact: {
+    contactForm: {
       title: "Контакт",
       subtitle: "Есть проект? Давайте поговорим!",
       name: "Ваше имя",
@@ -291,7 +291,7 @@ export const translations = {
       viewCertificate: "View Certificate",
       noCertificates: "No certificates added yet."
     },
-    contact: {
+    contactForm: {
       title: "Contact",
       subtitle: "Have a project? Let's talk!",
       name: "Your Name",

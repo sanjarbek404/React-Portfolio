@@ -31,7 +31,7 @@ export const StatsSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="bg-white/40 dark:bg-black/40 backdrop-blur-md rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center text-center border border-black/5 dark:border-white/5 shadow-sm hover:shadow-lg transition-all group hover:-translate-y-1"
+                className="bg-white/40 dark:bg-black/40 rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center text-center border border-black/5 dark:border-white/5 shadow-sm hover:shadow-lg transition-all group hover:-translate-y-1"
               >
                 <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   {icon}

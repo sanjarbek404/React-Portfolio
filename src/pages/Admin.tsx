@@ -18,7 +18,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }: any) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 "
         >
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -504,7 +504,7 @@ const ProjectsManager = () => {
                         <button 
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setFormData({...formData, image: ''}); }}
-                          className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors"
+                          className="absolute top-4 right-4 w-10 h-10 bg-black/50  text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors"
                         >
                           <X size={18} />
                         </button>
@@ -577,7 +577,7 @@ const ProjectsManager = () => {
               <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                 <button 
                   onClick={() => handleEdit(project)}
-                  className="w-12 h-12 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-blue-500 hover:bg-blue-500 hover:text-white transition-colors shadow-lg"
+                  className="w-12 h-12 bg-white/90  rounded-full flex items-center justify-center text-blue-500 hover:bg-blue-500 hover:text-white transition-colors shadow-lg"
                   title="Tahrirlash"
                 >
                   <PenTool size={20} />
@@ -586,7 +586,7 @@ const ProjectsManager = () => {
                   onConfirm={() => handleDelete(project.id)} 
                   title="Loyihani o'chirish" 
                   message="Haqiqatan ham bu loyihani o'chirmoqchimisiz? Bu amalni ortga qaytarib bo'lmaydi."
-                  className="w-12 h-12 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-colors shadow-lg"
+                  className="w-12 h-12 bg-white/90  rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-colors shadow-lg"
                 >
                   <Trash2 size={20} />
                 </DeleteButton>
@@ -1519,8 +1519,8 @@ const SettingsManager = () => {
     aboutTitle: 'Sodda. Kreativ. Samarali.', 
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
-    expYears: '3+', 
-    githubCommits: '1.2k', 
+    expYears: '1+', 
+    githubCommits: '500+, 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
@@ -1683,7 +1683,7 @@ const SettingsManager = () => {
               <button 
                 type="button"
                 onClick={(e) => { e.stopPropagation(); removeImage(); }}
-                className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors"
+                className="absolute top-4 right-4 w-10 h-10 bg-black/50  text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors"
               >
                 <X size={18} />
               </button>
@@ -1718,7 +1718,7 @@ const SettingsManager = () => {
             </div>
             <div>
               <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Tajriba yillari</label>
-              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="3+" />
+              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="1+" />
             </div>
           </form>
 
@@ -1997,7 +1997,7 @@ export default function Admin() {
     <div className="min-h-screen bg-[#f4f7fe] dark:bg-[#050505] font-sans selection:bg-blue-500/30">
       
       {/* Mobile Topbar */}
-      <div className="md:hidden sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center justify-between">
+      <div className="md:hidden sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 -xl border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-lg font-black text-lg">S</div>
           <span className="font-bold text-[#1d1d1f] dark:text-white">Admin Panel</span>
@@ -2010,7 +2010,7 @@ export default function Admin() {
       <div className="flex flex-col md:flex-row">
         {/* Sidebar overlay for mobile */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
+          <div className="fixed inset-0 bg-black/60  z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
         )}
 
         {/* Sidebar */}
@@ -2062,8 +2062,36 @@ export default function Admin() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 md:p-8 min-h-screen max-w-[100vw]">
-          <div className="max-w-[1400px] mx-auto">
+        <main className="flex-1 min-h-screen max-w-[100vw] flex flex-col">
+          {/* Topbar inside Main */}
+          <header className="hidden md:flex h-20 items-center justify-between px-8 bg-white/50 dark:bg-[#0a0a0a]/50 -xl border-b border-gray-100 dark:border-white/5 sticky top-0 z-40">
+             <div className="flex items-center gap-4">
+                <div className="relative">
+                   <input type="text" placeholder="Qidirish..." className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64 text-[#1d1d1f] dark:text-white" />
+                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                   </div>
+                </div>
+             </div>
+             <div className="flex items-center gap-4">
+                <button className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                   <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#0a0a0a]"></span>
+                </button>
+                <div className="h-8 w-px bg-gray-200 dark:bg-white/10 mx-2"></div>
+                <div className="flex items-center gap-3 cursor-pointer">
+                   <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                      S
+                   </div>
+                   <div className="hidden lg:block">
+                      <p className="text-sm font-semibold text-[#1d1d1f] dark:text-white leading-tight">Sanjarbek</p>
+                      <p className="text-xs text-gray-500">Admin</p>
+                   </div>
+                </div>
+             </div>
+          </header>
+
+          <div className="p-4 md:p-8 flex-1 max-w-[1400px] w-full mx-auto">
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<Dashboard />} />

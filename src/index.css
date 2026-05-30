@@ -9,13 +9,12 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  @apply transition-colors duration-500 ease-out;
+  @apply transition-colors duration-500 ease-out bg-[#f4f7fe] dark:bg-[#050505] text-[#1d1d1f] dark:text-[#ebecf0];
 }
-
-
 
 /* Modern Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -27,15 +26,10 @@ body {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #3b82f6, #06b6d4);
   border-radius: 100px;
-  border: 2px solid transparent;
-  background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #3b82f6, #06b6d4);
-  background-clip: border-box;
+  background: linear-gradient(to bottom, #2563eb, #0891b2);
 }
-
-
 
 @keyframes scan {
   0% { top: 0; opacity: 0; }
@@ -44,7 +38,7 @@ body {
   100% { top: 100%; opacity: 0; }
 }
 .animate-scan {
-  animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: scan 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes marquee {
@@ -52,7 +46,7 @@ body {
   100% { transform: translateX(-50%); }
 }
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 30s linear infinite;
 }
 .animate-marquee:hover {
   animation-play-state: paused;
@@ -60,15 +54,15 @@ body {
 
 @layer utilities {
   .bg-dot-pattern {
-    background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
     background-size: 32px 32px;
   }
   .dark .bg-dot-pattern {
-    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
   }
   .bg-noise {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
   }
   .dark .bg-noise {
     opacity: 0.05;
@@ -78,18 +72,32 @@ body {
     color: transparent;
   }
   .dark .outline-text-subtle {
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.8);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
     color: transparent;
   }
 }
 
+@layer components {
+  /* CRM like generic card styling */
+  .crm-card {
+    @apply bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 transition-shadow duration-300;
+  }
+  .crm-card:hover {
+    @apply shadow-md border-gray-200 dark:border-white/20;
+  }
+}
+
+@keyframes fadeInWeek {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in-week {
+  opacity: 0;
+  animation: fadeInWeek 0.5s ease-out forwards;
+}
+
 @media print {
-  @page {
-    margin: 0;
-    size: A4;
-  }
-  body {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
+  @page { margin: 0; size: A4; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

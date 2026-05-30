@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }: any) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 ">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -161,7 +161,7 @@ export default function CVBuilder() {
   if (!selectedTemplate) {
     return (
       <div className="min-h-screen bg-[#fbfbfd] dark:bg-[#0a0a0a] text-[#1d1d1f] dark:text-white flex flex-col">
-        <header className="bg-white/80 dark:bg-[#1d1d1f]/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10 sticky top-0 z-40">
+        <header className="bg-white/80 dark:bg-[#1d1d1f]/80 border-b border-gray-200 dark:border-white/10 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-4">
             <Link to="/" className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
               <ArrowLeft size={20} />
@@ -211,7 +211,7 @@ export default function CVBuilder() {
   return (
     <div className="min-h-screen bg-[#fbfbfd] dark:bg-[#0a0a0a] text-[#1d1d1f] dark:text-white flex flex-col">
       {/* Header */}
-      <header className="bg-white/80 dark:bg-[#1d1d1f]/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10 sticky top-0 z-40">
+      <header className="bg-white/80 dark:bg-[#1d1d1f]/80 border-b border-gray-200 dark:border-white/10 sticky top-0 z-40">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button onClick={() => setSelectedTemplate(null)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="Shablonlarga qaytish">
@@ -415,10 +415,10 @@ export default function CVBuilder() {
           {/* Live Preview (Right Side) */}
           <div className="bg-gray-200 dark:bg-gray-800 rounded-3xl p-4 md:p-8 flex justify-center overflow-x-auto h-[500px] lg:h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar relative order-1 lg:order-2">
             <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-              <div className="bg-black/50 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm font-medium">
+              <div className="bg-black/50 text-white text-xs px-3 py-1.5 rounded-full  font-medium">
                 Jonli Ko'rinish
               </div>
-              <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full p-1">
+              <div className="flex items-center gap-1 bg-black/50  rounded-full p-1">
                 <button onClick={() => setZoom(Math.max(0.4, zoom - 0.1))} className="p-1.5 text-white hover:bg-white/20 rounded-full transition-colors">
                   <ZoomOut size={14} />
                 </button>
