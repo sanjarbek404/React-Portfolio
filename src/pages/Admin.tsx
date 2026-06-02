@@ -1520,7 +1520,7 @@ const SettingsManager = () => {
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
     expYears: '1+', 
-    githubCommits: '500+, 
+    githubCommits: '500+', 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
@@ -1719,7 +1719,7 @@ const SettingsManager = () => {
             <div>
               <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Tajriba yillari</label>
               <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="1+" />
-            </div>
+            </div>     
           </form>
 
           <h3 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-8">GitHub & Spotify (BentoGrid)</h3>
