@@ -33,7 +33,11 @@ export function Guestbook({ t }: { t: any }) {
       await signInWithPopup(auth, githubProvider);
     } catch (err: any) {
       console.error(err);
-      toast.error('GithHub orqali kirishda xatolik yuz berdi. (Firebase sozlamalarini tekshiring)');
+      if (err.code === 'auth/unauthorized-domain') {
+        toast.error(`"${window.location.hostname}" domenini Firebase Console (Authentication -> Settings -> Authorized domains) qismiga qo'shishingiz kerak.`, { duration: 7000 });
+      } else {
+        toast.error('GitHub orqali kirishda xatolik yuz berdi. (Firebase sozlamalarini tekshiring)');
+      }
     }
   };
 

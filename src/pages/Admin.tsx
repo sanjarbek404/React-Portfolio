@@ -265,13 +265,13 @@ const Dashboard = () => {
 const AdminHeader = ({ title, subtitle, isAdding, onToggleAdd, addText = "Yangi qo'shish", icon: Icon }: any) => (
   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
     <div>
-      <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white">{title}</h2>
-      {subtitle && <p className="text-gray-500 mt-1.5 font-medium">{subtitle}</p>}
+      <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[#1d1d1f] dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 drop-shadow-sm">{title}</h2>
+      {subtitle && <p className="text-gray-500 dark:text-gray-400 mt-1.5 font-medium">{subtitle}</p>}
     </div>
     {onToggleAdd && (
       <button 
         onClick={onToggleAdd}
-        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md shadow-blue-500/20 w-full md:w-auto justify-center"
+        className="flex items-center gap-2 px-6 py-2.5 bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] rounded-xl font-bold transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto justify-center"
       >
         {isAdding ? 'Bekor qilish' : <><Plus size={20} /> {addText}</>}
       </button>
@@ -1520,7 +1520,7 @@ const SettingsManager = () => {
     aboutTitle: 'Sodda. Kreativ. Samarali.', 
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
-    expYears: '3+', 
+    expYears: '1+', 
     githubCommits: '1.2k', 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
@@ -1719,7 +1719,7 @@ const SettingsManager = () => {
             </div>
             <div>
               <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Tajriba yillari</label>
-              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="3+" />
+              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="1+" />
             </div>
           </form>
 
@@ -1883,6 +1883,100 @@ const MessagesManager = () => {
   );
 };
 
+const GuestbookManager = () => {
+  const [messages, setMessages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !db) {
+      setLoading(false);
+      return;
+    }
+
+    const q = query(collection(db, 'guestbook'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLoading(false);
+    }, (error) => {
+      console.warn("Guestbook fetch error:", error.message);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!isFirebaseConfigured || !db) return;
+    try {
+      await deleteDoc(doc(db, 'guestbook', id));
+      toast.success("Izoh o'chirildi");
+    } catch (error) {
+      toast.error("O'chirishda xatolik yuz berdi");
+    }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-8"
+    >
+      <AdminHeader 
+        title="Mehmonlar Kitobi" 
+        subtitle="Sayt mehmonlarining izohlari" 
+      />
+
+      <div className="grid grid-cols-1 gap-6">
+        {loading ? (
+          <div className="text-center py-20 text-gray-500">Yuklanmoqda...</div>
+        ) : messages.length === 0 ? (
+          <div className="text-center py-20 bg-white dark:bg-[#0a0a0a] rounded-2xl border border-gray-100 dark:border-white/10">
+            <MessageSquare className="mx-auto text-gray-300 dark:text-gray-600 mb-6" size={64} />
+            <p className="text-gray-500 dark:text-gray-400 font-medium text-lg">Hali izohlar yo'q.</p>
+          </div>
+        ) : (
+          <AnimatePresence>
+            {messages.map((msg, index) => (
+              <motion.div 
+                key={msg.id} 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="bg-white dark:bg-[#0a0a0a] p-8 rounded-2xl border border-gray-100 dark:border-white/10 shadow-lg shadow-black/5 flex flex-col md:flex-row gap-8 justify-between items-start group hover:-translate-y-1 transition-transform duration-300"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-4">
+                    <img src={msg.userPhoto || `https://api.dicebear.com/7.x/initials/svg?seed=${msg.userName}`} alt="Avatar" className="w-12 h-12 rounded-full border border-gray-200 dark:border-white/10 shrink-0" />
+                    <div>
+                      <div className="flex items-center gap-2">
+                         <h3 className="text-lg font-bold text-[#1d1d1f] dark:text-white">{msg.userName}</h3>
+                         {msg.githubParams && <span className="text-[10px] text-gray-500 bg-gray-200 dark:bg-white/10 px-2 py-0.5 rounded-full">@{msg.githubParams}</span>}
+                      </div>
+                      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleString('uz-UZ') : ''}</span>
+                    </div>
+                  </div>
+                  <p className="text-[#1d1d1f] dark:text-gray-300 bg-gray-50 dark:bg-white/5 p-6 rounded-2xl leading-relaxed">{msg.text}</p>
+                </div>
+                <DeleteButton 
+                  onConfirm={() => handleDelete(msg.id)} 
+                  title="Izohni o'chirish" 
+                  message="Haqiqatan ham bu izohni o'chirmoqchimisiz?"
+                  className="w-12 h-12 shrink-0 bg-gray-50 dark:bg-white/5 text-gray-400 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
+                >
+                  <Trash2 size={20} />
+                </DeleteButton>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
 const TranslationsManager = () => {
   const [data, setData] = useState<string>('{}');
   const [saving, setSaving] = useState(false);
@@ -1990,6 +2084,7 @@ export default function Admin() {
     { path: '/admin/skills', icon: <Code size={20} />, label: "Ko'nikmalar" },
     { path: '/admin/certs', icon: <Award size={20} />, label: 'Sertifikatlar' },
     { path: '/admin/messages', icon: <MessageSquare size={20} />, label: 'Xabarlar' },
+    { path: '/admin/guestbook', icon: <Users size={20} />, label: 'Mehmonlar' },
     { path: '/admin/translations', icon: <PenTool size={20} />, label: 'Matnlar' },
     { path: '/admin/settings', icon: <Settings size={20} />, label: 'Sozlamalar' },
   ];
@@ -2103,6 +2198,7 @@ export default function Admin() {
                 <Route path="/skills" element={<SkillsManager />} />
                 <Route path="/certs" element={<CertificatesManager />} />
                 <Route path="/messages" element={<MessagesManager />} />
+                <Route path="/guestbook" element={<GuestbookManager />} />
                 <Route path="/translations" element={<TranslationsManager />} />
                 <Route path="/settings" element={<SettingsManager />} />
               </Routes>
