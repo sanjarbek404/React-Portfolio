@@ -290,7 +290,7 @@ const ProjectsManager = () => {
   const zipInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
-    title: '', desc: '', image: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]'
+    title: '', desc: '', image: '', videoUrl: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]'
   });
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -398,6 +398,7 @@ const ProjectsManager = () => {
       title: project.title || '',
       desc: project.desc || '',
       image: project.image || '',
+      videoUrl: project.videoUrl || '',
       tag: project.tag || '',
       link: project.link || '',
       githubUrl: project.githubUrl || '',
@@ -537,7 +538,7 @@ const ProjectsManager = () => {
                       onClick={() => {
                         setIsAdding(false);
                         setEditingId(null);
-                        setFormData({ title: '', desc: '', image: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]' });
+                        setFormData({ title: '', desc: '', image: '', videoUrl: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]' });
                       }}
                       className="bg-gray-200 dark:bg-white/10 text-gray-700 dark:text-white px-10 py-4 rounded-xl font-bold hover:bg-gray-300 dark:hover:bg-white/20 transition-colors w-full md:w-auto"
                     >
@@ -1519,8 +1520,8 @@ const SettingsManager = () => {
     aboutTitle: 'Sodda. Kreativ. Samarali.', 
     aboutShort: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir.', 
     aboutFull: 'Dasturlash men uchun shunchaki kod yozish emas, balki insonlar hayotini yengillashtiruvchi vositalar yaratishdir. Har bir loyihada minimalizm va yuqori unumdorlikni birinchi o\'ringa qo\'yaman.\n\nMening maqsadim - foydalanuvchi interfeyslarini shunchalik sodda qilishki, hatto birinchi marta kirgan odam ham o\'zini uydagidek his qilsin. Murakkab muammolarga kreativ yechimlar topish mening asosiy kuchimdir.', 
-    expYears: '1+', 
-    githubCommits: '500+', 
+    expYears: '3+', 
+    githubCommits: '1.2k', 
     githubYearText: 'Bu yilgi faollik',
     spotifySong: 'Lofi Hip Hop Radio', 
     spotifyArtist: 'ChilledCow'
@@ -1718,8 +1719,8 @@ const SettingsManager = () => {
             </div>
             <div>
               <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Tajriba yillari</label>
-              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="1+" />
-            </div>     
+              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="3+" />
+            </div>
           </form>
 
           <h3 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-8">GitHub & Spotify (BentoGrid)</h3>

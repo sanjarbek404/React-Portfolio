@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, signInWithPopup, GithubAuthProvider, signOut } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -16,6 +16,8 @@ export const isFirebaseConfigured = !!firebaseConfig.apiKey;
 const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
 export const auth: any = app ? getAuth(app) : null;
 export const db: Firestore = app ? getFirestore(app) : (null as any);
+export const githubProvider = new GithubAuthProvider();
+export { signInWithPopup, signOut };
 
 export enum OperationType {
   CREATE = 'create',
