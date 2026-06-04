@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-react';
-import { auth, isFirebaseConfigured } from '../lib/firebase';
+import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, Terminal } from 'lucide-react';
+import { auth, db, isFirebaseConfigured } from '../lib/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
+import { motion } from 'motion/react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -24,10 +26,30 @@ export default function Login() {
     return () => unsubscribe();
   }, [navigate]);
 
+  const getSystemInfo = () => {
+    const ua = navigator.userAgent;
+    let browser = "Unknown Browser";
+    let os = "Unknown OS";
+    
+    if (ua.match(/chrome|chromium|crios/i)) browser = "Chrome";
+    else if (ua.match(/firefox|fxios/i)) browser = "Firefox";
+    else if (ua.match(/safari/i)) browser = "Safari";
+    else if (ua.match(/opr\//i)) browser = "Opera";
+    else if (ua.match(/edg/i)) browser = "Edge";
+    
+    if (ua.match(/windows nt/i)) os = "Windows";
+    else if (ua.match(/macintosh|mac os x/i)) os = "macOS";
+    else if (ua.match(/linux/i)) os = "Linux";
+    else if (ua.match(/iphone|ipad|ipod/i)) os = "iOS";
+    else if (ua.match(/android/i)) os = "Android";
+    
+    return { browser, os };
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isFirebaseConfigured || !auth) {
+    if (!isFirebaseConfigured || !auth || !db) {
       toast.error("Firebase ulanmagan! Iltimos, .env faylni tekshiring.");
       return;
     }
@@ -36,7 +58,25 @@ export default function Login() {
     const toastId = toast.loading("Tizimga kirilmoqda...");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Store session
+      const sessionId = crypto.randomUUID();
+      localStorage.setItem('adminSessionId', sessionId);
+      
+      const { browser, os } = getSystemInfo();
+      
+      await setDoc(doc(db, 'sessions', sessionId), {
+        userId: user.uid,
+        email: user.email,
+        browser,
+        os,
+        userAgent: navigator.userAgent,
+        loginTime: serverTimestamp(),
+        lastActive: serverTimestamp()
+      });
+
       toast.success("Muvaffaqiyatli kirdingiz!", { id: toastId });
       navigate('/admin');
     } catch (error: any) {
@@ -48,55 +88,60 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-50"></div>
-      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 relative overflow-hidden font-sans">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-[#050505] to-[#050505]"></div>
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
       
       <Link 
         to="/" 
-        className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white font-medium transition-colors z-20"
+        className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white font-medium transition-colors z-20 bg-white/5 py-2 px-4 rounded-full border border-white/10 backdrop-blur-md hover:bg-white/10"
       >
-        <ArrowLeft size={20} />
-        Saytga qaytish
+        <ArrowLeft size={16} />
+        <span className="text-sm">Saytga qaytish</span>
       </Link>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
+      <div className="absolute -top-[20%] -right-[10%] w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
       
-      <div className="w-full max-w-md bg-white/5  rounded-[2rem] p-10 shadow-2xl border border-white/10 relative z-10">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-md bg-[#0a0a0a] rounded-[2rem] p-10 shadow-2xl border border-white/10 relative z-10 backdrop-blur-2xl"
+      >
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-blue-500/20 rotate-3 hover:rotate-6 transition-transform duration-300">
-            <ShieldCheck size={40} />
+          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-blue-500 mx-auto mb-6 shadow-inner border border-white/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-blue-500/20 blur-xl group-hover:bg-blue-500/30 transition-colors duration-500"></div>
+            <Terminal size={28} className="relative z-10" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Admin Panel</h1>
-          <p className="text-gray-400 font-medium">Xavfsiz boshqaruv tizimi</p>
+          <h1 className="text-3xl font-display font-medium tracking-tight text-white mb-2">Workspace</h1>
+          <p className="text-sm text-gray-400">Markaziy boshqaruv tizimi</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2 ml-1">Email manzil</label>
             <div className="relative group">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-500 transition-colors" size={20} />
               <input 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 transition-all font-medium" 
-                placeholder="admin@misol.uz"
+                className="w-full bg-[#111] border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-medium text-sm" 
+                placeholder="Elektron pochta"
                 required
               />
             </div>
           </div>
           
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2 ml-1">Parol</label>
             <div className="relative group">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-500 transition-colors" size={20} />
               <input 
                 type="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/10 transition-all font-medium" 
-                placeholder="••••••••"
+                className="w-full bg-[#111] border border-white/10 rounded-xl py-3.5 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-medium text-sm" 
+                placeholder="Parol"
                 required
               />
             </div>
@@ -105,13 +150,19 @@ export default function Login() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 shadow-lg shadow-blue-500/25 mt-4"
+            className="w-full bg-white text-black py-3.5 rounded-xl font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 mt-6 shadow-lg shadow-white/5"
           >
-            {loading ? 'Tekshirilmoqda...' : 'Tizimga kirish'}
-            {!loading && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+            ) : (
+              <>
+                Tizimga kirish
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
