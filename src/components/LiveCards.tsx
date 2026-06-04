@@ -1,6 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import { Github, Music } from 'lucide-react';
-import { BentoCard } from './PortfolioCards'; // Assuming we export BentoCard
+import { Github, Music, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+
+const BentoCard = ({ children, className, title, fullContent }: { children: React.ReactNode, className?: string, title?: string, fullContent?: React.ReactNode }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <>
+      <motion.div 
+        layoutId={`card-${title}`}
+        onClick={() => fullContent && setIsExpanded(true)}
+        whileHover={{ y: -5 }}
+        className={`h-full bg-white/70 dark:bg-black/30 rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 border border-black/5 dark:border-white/10 relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 ${fullContent ? 'cursor-pointer' : ''} ${className || ''}`}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:to-blue-500/10 transition-colors duration-500" />
+        <div className="relative z-10 w-full h-full flex flex-col justify-between">
+          {children}
+        </div>
+        {fullContent && (
+          <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
+              <ArrowUpRight size={16} />
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      <AnimatePresence>
+        {isExpanded && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsExpanded(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            />
+            <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
+              <motion.div
+                layoutId={`card-${title}`}
+                className="bg-white dark:bg-[#1d1d1f] w-full max-w-2xl max-h-[85vh] rounded-[2rem] overflow-y-auto custom-scrollbar pointer-events-auto"
+              >
+                {fullContent}
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
 
 // We will fetch Github stats
 export function GithubLiveCard({ settings, t }: { settings: any, t: any }) {

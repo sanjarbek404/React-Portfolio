@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './lib/LanguageContext';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
+import { CustomCursor } from './components/CustomCursor';
 
 const Portfolio = lazy(() => import('./pages/Portfolio'));
 const Login = lazy(() => import('./pages/Login'));
@@ -23,6 +24,7 @@ const LoadingFallback = () => (
 export default function App() {
   return (
     <LanguageProvider>
+      <CustomCursor />
       <Router>
         <GoogleAnalytics />
         <Toaster 

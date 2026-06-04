@@ -1,7 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
+    // Yordamchi funksiyalar
     function isAuthenticated() {
       return request.auth != null;
     }
@@ -9,52 +9,34 @@ service cloud.firestore {
     function isAdmin() {
       return isAuthenticated() && 
         (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
-         request.auth.token.email == "sanjarbektest111@gmail.com");
+         request.auth.token.email == "sanjarbekotabekov010@gmail.com" ||
+         request.auth.token.email == "");
     }
 
-    // Publicly readable collections
-    match /settings/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    match /projects/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    match /skills/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    match /certificates/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    match /experiences/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    match /education/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    match /services/{document=**} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+    // Hamma o'qiy oladigan, lekin faqat admin o'zgartira oladigan bo'limlar
+    match /settings/{document=**} { allow read: if true; allow write: if isAdmin(); }
+    match /projects/{document=**} { allow read: if true; allow write: if isAdmin(); }
+    match /skills/{document=**} { allow read: if true; allow write: if isAdmin(); }
+    match /certificates/{document=**} { allow read: if true; allow write: if isAdmin(); }
+    match /experiences/{document=**} { allow read: if true; allow write: if isAdmin(); }
+    match /education/{document=**} { allow read: if true; allow write: if isAdmin(); }
+    match /services/{document=**} { allow read: if true; allow write: if isAdmin(); }
 
-    // Publicly writable but private/admin readable
+    // Xabarlar: Hamma yubora oladi, faqat admin o'qiydi
     match /messages/{messageId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
 
-    // Analytics and Stats (Publicly writable)
+    // Mehmonlar kitobi: Hamma o'qiydi va yoza oladi, faqat admin o'chiradi
+    match /guestbook/{messageId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // Analitika va Reaksiyalar: Hamma yozishi mumkin
     match /analytics/{date} {
       allow get, create, update: if true;
       allow list: if isAdmin();
@@ -65,7 +47,7 @@ service cloud.firestore {
       allow create, update: if true;
     }
 
-    // User profiles
+    // Foydalanuvchi profillari
     match /users/{userId} {
       allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       allow create: if isAuthenticated() && (request.auth.uid == userId);

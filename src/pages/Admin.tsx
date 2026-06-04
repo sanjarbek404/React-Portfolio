@@ -3,7 +3,7 @@ import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Github, LayoutDashboard, FolderKanban, Settings, LogOut, Plus, Trash2, BarChart3, Users, Eye, UploadCloud, Upload, Image as ImageIcon, X, MessageSquare, Award, Code, Briefcase, MonitorSmartphone, Server, PenTool, GraduationCap, Globe, ExternalLink, Menu, ChevronDown, ArrowUpRight } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { auth, db, isFirebaseConfigured } from '../lib/firebase';
-import { collection, addDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, updateDoc, query, orderBy } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
@@ -240,20 +240,30 @@ const Dashboard = () => {
               <p>Hali ma'lumot yo'q</p>
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%" minHeight={300} minWidth={1}>
-              <BarChart data={stats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={6}>
+            <ResponsiveContainer width="100%" height={400}>
+              <AreaChart data={stats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#86868b', fontSize: 12, fontWeight: 500 }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#86868b', fontSize: 12, fontWeight: 500 }} dx={-10} />
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" strokeOpacity={0.5} />
                 <Tooltip 
-                  cursor={{ fill: 'rgba(0,0,0,0.02)' }}
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', backgroundColor: '#fff', color: '#1d1d1f', fontWeight: 600 }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', color: '#1d1d1f', fontWeight: 600 }}
                   itemStyle={{ color: '#1d1d1f', fontWeight: 600 }}
+                  cursor={{ stroke: '#94a3b8', strokeWidth: 1, strokeDasharray: '5 5' }}
                 />
                 <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '12px', fontWeight: 600, color: '#64748b', paddingTop: '20px' }} />
-                <Bar dataKey="views" fill="#f97316" radius={[4, 4, 0, 0]} name="Ko'rishlar" barSize={12} />
-                <Bar dataKey="visitors" fill="#c4b5fd" radius={[4, 4, 0, 0]} name="Tashrifchilar" barSize={12} />
-              </BarChart>
+                <Area type="monotone" dataKey="views" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" name="Ko'rishlar" />
+                <Area type="monotone" dataKey="visitors" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorVisitors)" name="Tashrifchilar" />
+              </AreaChart>
             </ResponsiveContainer>
           )}
         </div>
@@ -285,9 +295,7 @@ const ProjectsManager = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [isUploadingFile, setIsUploadingFile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const zipInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
     title: '', desc: '', image: '', videoUrl: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]'
@@ -351,11 +359,6 @@ const ProjectsManager = () => {
     }
   };
 
-  const handleZipChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Removed R2 upload logic
-    toast.error("Fayl yuklash hozircha o'chirilgan. Iltimos, link kiriting.");
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.image) {
@@ -384,7 +387,7 @@ const ProjectsManager = () => {
       
       setIsAdding(false);
       setEditingId(null);
-      setFormData({ title: '', desc: '', image: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]' });
+      setFormData({ title: '', desc: '', image: '', videoUrl: '', tag: '', link: '', githubUrl: '', downloadUrl: '', color: 'bg-[#f5f5f7]' });
     } catch (error) {
       console.error("Error saving document: ", error);
       toast.error("Xatolik yuz berdi");
@@ -466,19 +469,14 @@ const ProjectsManager = () => {
                   <input type="url" value={formData.githubUrl} onChange={e => setFormData({...formData, githubUrl: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="https://github.com/..." />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Loyiha Fayli (ZIP/RAR) - Hozircha o'chirilgan</label>
-                  <div className="flex items-center gap-4">
-                    <input 
-                      type="text" 
-                      value={formData.downloadUrl} 
-                      onChange={e => setFormData({...formData, downloadUrl: e.target.value})} 
-                      className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" 
-                      placeholder="https://... (Ixtiyoriy)" 
-                    />
-                  </div>
-                  {formData.downloadUrl && (
-                    <p className="text-xs text-green-500 mt-2 font-medium truncate">Fayl manzili: {formData.downloadUrl}</p>
-                  )}
+                  <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Fayl manzili (Ixtiyoriy link)</label>
+                  <input 
+                    type="url" 
+                    value={formData.downloadUrl} 
+                    onChange={e => setFormData({...formData, downloadUrl: e.target.value})} 
+                    className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" 
+                    placeholder="https://... (Masalan, Google Drive, App Store...)" 
+                  />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Qisqacha ta'rif</label>
@@ -1894,10 +1892,10 @@ const GuestbookManager = () => {
     }
 
     const q = query(collection(db, 'guestbook'), orderBy('createdAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    const unsubscribe = onSnapshot(q, (snapshot: any) => {
+      setMessages(snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() })));
       setLoading(false);
-    }, (error) => {
+    }, (error: any) => {
       console.warn("Guestbook fetch error:", error.message);
       setLoading(false);
     });
@@ -2093,7 +2091,7 @@ export default function Admin() {
     <div className="min-h-screen bg-[#f4f7fe] dark:bg-[#050505] font-sans selection:bg-blue-500/30">
       
       {/* Mobile Topbar */}
-      <div className="md:hidden sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 -xl border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center justify-between">
+      <div className="md:hidden sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 px-4 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-lg font-black text-lg">S</div>
           <span className="font-bold text-[#1d1d1f] dark:text-white">Admin Panel</span>
@@ -2124,16 +2122,15 @@ export default function Admin() {
           <nav className="flex-1 px-4 space-y-1.5 mt-8 md:mt-2 overflow-y-auto scrollbar-hide">
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-4">Menyu</div>
             {navItems.map((item, index) => {
-              const isActive = location.pathname === item.path;
+              const isActive = item.path === '/admin' ? location.pathname === '/admin' : (location.pathname === item.path || location.pathname.startsWith(item.path + '/'));
               return (
                 <Link 
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all group relative overflow-hidden ${isActive ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-[#1d1d1f] dark:hover:text-white'}`}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-[1rem] font-medium transition-all group relative overflow-hidden ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-[#1d1d1f] dark:hover:text-white'}`}
                 >
-                  {/* removed border */}
-                  <span className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</span>
-                  <span>{item.label}</span>
+                  <span className={`transition-transform duration-300 ${isActive ? 'scale-110 text-white' : 'group-hover:scale-110'}`}>{item.icon}</span>
+                  <span className="font-semibold">{item.label}</span>
                 </Link>
               );
             })}
@@ -2160,28 +2157,28 @@ export default function Admin() {
         {/* Main Content */}
         <main className="flex-1 min-h-screen max-w-[100vw] flex flex-col">
           {/* Topbar inside Main */}
-          <header className="hidden md:flex h-20 items-center justify-between px-8 bg-white/50 dark:bg-[#0a0a0a]/50 -xl border-b border-gray-100 dark:border-white/5 sticky top-0 z-40">
+          <header className="hidden md:flex h-20 items-center justify-between px-8 bg-white/70 dark:bg-[#0a0a0a]/70 backdrop-blur-md border-b border-gray-100 dark:border-white/5 sticky top-0 z-40">
              <div className="flex items-center gap-4">
                 <div className="relative">
-                   <input type="text" placeholder="Qidirish..." className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64 text-[#1d1d1f] dark:text-white" />
+                   <input type="text" placeholder="Qidirish..." className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64 text-[#1d1d1f] dark:text-white transition-all shadow-sm focus:shadow-md" onKeyDown={(e) => { if(e.key === 'Enter') toast("Qidiruv funksiyasi hozircha ulanmagan") }} />
                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                    </div>
                 </div>
              </div>
              <div className="flex items-center gap-4">
-                <button className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors">
+                <button onClick={() => toast("Yangi xabarlar yo'q")} className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors active:scale-95">
                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#0a0a0a]"></span>
                 </button>
                 <div className="h-8 w-px bg-gray-200 dark:bg-white/10 mx-2"></div>
-                <div className="flex items-center gap-3 cursor-pointer">
-                   <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                <div onClick={handleLogout} className="flex items-center gap-3 cursor-pointer group px-2 py-1 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                   <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:shadow-md transition-shadow">
                       S
                    </div>
                    <div className="hidden lg:block">
-                      <p className="text-sm font-semibold text-[#1d1d1f] dark:text-white leading-tight">Sanjarbek</p>
-                      <p className="text-xs text-gray-500">Admin</p>
+                      <p className="text-sm font-semibold text-[#1d1d1f] dark:text-white leading-tight group-hover:text-blue-500 transition-colors">Sanjarbek</p>
+                      <p className="text-xs text-gray-500 font-medium">Admin</p>
                    </div>
                 </div>
              </div>

@@ -121,9 +121,9 @@ const Typewriter = ({ text, delay = 0, className = "" }: { text: string, delay?:
 
 const BackgroundAnimation = () => {
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-      <div className="absolute top-[-30%] left-[-30%] w-[100vw] h-[100vw] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.15)_0%,rgba(0,0,0,0)_70%)] dark:bg-[radial-gradient(circle,rgba(37,99,235,0.08)_0%,rgba(0,0,0,0)_70%)] transition-all duration-700" />
-      <div className="absolute bottom-[-30%] right-[-30%] w-[100vw] h-[100vw] rounded-full bg-[radial-gradient(circle,rgba(6,182,212,0.1)_0%,rgba(0,0,0,0)_70%)] dark:bg-[radial-gradient(circle,rgba(6,182,212,0.05)_0%,rgba(0,0,0,0)_70%)] transition-all duration-700" />
+    <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none contain-strict">
+      <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_0%,rgba(0,0,0,0)_50%)] dark:bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.03)_0%,rgba(0,0,0,0)_40%)]" />
+      <div className="absolute -bottom-1/2 -right-1/2 w-[200%] h-[200%] rounded-full bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05)_0%,rgba(0,0,0,0)_50%)] dark:bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.03)_0%,rgba(0,0,0,0)_40%)]" />
     </div>
   );
 };
@@ -145,16 +145,9 @@ const ThemeTransition = ({ isDark, trigger }: { isDark: boolean, trigger: boolea
 };
 
 const FloatingNav = ({ isDark, toggleDark }: { isDark: boolean, toggleDark: () => void }) => {
-  const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [themeTrigger, setThemeTrigger] = useState(false);
   const { lang, setLang, t } = useLanguage();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleThemeToggle = () => {
     setThemeTrigger(true);
@@ -581,21 +574,17 @@ const Marquee = () => {
   ];
   
   return (
-    <div className="py-6 sm:py-8 bg-[#1d1d1f] dark:bg-white overflow-hidden whitespace-nowrap transform -rotate-2 scale-110 shadow-2xl z-20 relative flex">
-      <motion.div 
-        className="flex gap-8 items-center px-4 w-max will-change-transform"
-        animate={{ x: [0, -1000] }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-      >
+    <div className="py-6 sm:py-8 bg-[#1d1d1f] dark:bg-white overflow-hidden whitespace-nowrap transform -rotate-2 scale-110 shadow-2xl z-20 relative flex border-y border-white/10 dark:border-black/10 hover:rotate-0 transition-transform duration-500 ease-out">
+      <div className="flex gap-8 items-center px-4 w-max animate-marquee hover:[animation-play-state:paused]">
         {items.map((item, i) => (
           <div key={`m1-${i}`} className="flex items-center gap-8 group">
-            <span className="text-4xl md:text-5xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 hover:opacity-100 hover:text-blue-500 transition-all duration-300">
+            <span className="text-4xl md:text-5xl lg:text-7xl font-display font-black text-transparent outline-text-subtle dark:outline-text-subtle tracking-tighter uppercase opacity-80 group-hover:opacity-100 group-hover:text-blue-500 transition-all duration-300">
               {item}
             </span>
-            <Star className="text-[#3B82F6] fill-[#3B82F6] opacity-80" size={28} />
+            <Star className="text-[#3B82F6] fill-[#3B82F6] opacity-80 group-hover:rotate-180 transition-transform duration-700" size={28} />
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 };
@@ -918,18 +907,14 @@ const SkillsAndCerts = () => {
               <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white dark:from-[#0a0a0a] to-transparent z-10"></div>
               <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white dark:from-[#0a0a0a] to-transparent z-10"></div>
               
-              <motion.div 
-                className="flex gap-12 items-center w-max"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-              >
+              <div className="flex gap-12 items-center w-max animate-marquee hover:[animation-play-state:paused]">
                 {skills.length > 0 && [...skills, ...skills, ...skills, ...skills].map((skill, idx) => (
-                  <div key={idx} className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
+                  <div key={idx} className="flex items-center gap-4 opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0 cursor-pointer">
                     {getSkillIcon(skill)}
                     <span className="text-xl font-bold text-[#1d1d1f] dark:text-white whitespace-nowrap">{skill.name}</span>
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
             <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-32">
