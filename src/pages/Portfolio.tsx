@@ -12,6 +12,7 @@ import { GithubLiveCard, SpotifyLiveCard } from '../components/LiveCards';
 import { Guestbook } from '../components/Guestbook';
 import { FAQSection } from '../components/FAQSection';
 import { StatsSection } from '../components/StatsSection';
+import { TiltCard } from '../components/TiltCard';
 
 
 
@@ -100,20 +101,6 @@ const TextReveal = ({ children, className, delay = 0 }: { children: React.ReactN
         {children}
       </motion.div>
     </div>
-  );
-};
-
-const Typewriter = ({ text, delay = 0, className = "" }: { text: string, delay?: number, className?: string }) => {
-  return (
-    <motion.span 
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
-      className={className}
-    >
-      {text}
-    </motion.span>
   );
 };
 
@@ -433,9 +420,9 @@ const Hero = ({ settings }: { settings: any }) => {
               </StaggerItem>
 
               <StaggerItem>
-                <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[6rem] xl:text-[7.5rem] leading-[1.05] md:leading-[1.1] font-display font-bold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-6 relative">
-                  <Typewriter text="Sanjarbek" delay={0.6} /> <br/> 
-                  <Typewriter text="Otabekov." delay={0.9} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 dark:from-[#38bdf8] dark:to-[#0ea5e9]" />
+                <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] leading-[0.95] font-display font-black tracking-tighter text-[#1d1d1f] dark:text-white mb-6 relative">
+                  <TextReveal delay={0.1}>Sanjarbek</TextReveal>
+                  <TextReveal delay={0.3} className="text-transparent bg-clip-text bg-[linear-gradient(110deg,#3b82f6,45%,#06b6d4,55%,#3b82f6)] bg-[length:200%_auto] animate-shimmer">Otabekov.</TextReveal>
                 </h1>
               </StaggerItem>
               
@@ -516,7 +503,7 @@ const Hero = ({ settings }: { settings: any }) => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '';
+                      (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/sanjarbek/800/800';
                     }}
                   />
                 ) : (
@@ -716,7 +703,7 @@ const BentoGrid = ({ settings }: { settings: any }) => {
           <TextReveal>
             <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase relative">
               <span className="absolute -left-6 md:-left-12 top-1/2 -translate-y-1/2 w-4 h-4 md:w-8 md:h-8 rounded-full bg-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.3)]"></span>
-              <Typewriter text={t.about.title} />
+              {t.about.title}
             </h2>
           </TextReveal>
         </div>
@@ -890,7 +877,7 @@ const SkillsAndCerts = () => {
         <div className="mb-16">
           <TextReveal>
             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
-              <Typewriter text={t.skills.title} />
+              {t.skills.title}
             </h2>
           </TextReveal>
           <p className="text-xl text-[#86868b] dark:text-gray-400 max-w-2xl font-light">{t.skills.subtitle}</p>
@@ -951,7 +938,7 @@ const SkillsAndCerts = () => {
           <div className="mb-16">
             <TextReveal>
               <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
-                <Typewriter text={t.certificates.title} />
+                {t.certificates.title}
               </h2>
             </TextReveal>
             <p className="text-xl text-[#86868b] dark:text-gray-400 max-w-2xl font-light">{t.certificates.subtitle}</p>
@@ -1028,7 +1015,7 @@ const ServicesSection = () => {
         <div className="mb-16">
           <TextReveal>
             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
-              <Typewriter text={t.services.title} />
+              {t.services.title}
             </h2>
           </TextReveal>
           <p className="text-xl text-[#86868b] dark:text-gray-400 max-w-2xl font-light">{t.services.subtitle}</p>
@@ -1036,11 +1023,8 @@ const ServicesSection = () => {
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {services.map((service) => (
             <StaggerItem key={service.id}>
-              <motion.div 
-                whileHover={{ y: -10 }}
-                className="bg-white/80 dark:bg-[#111]/80 p-10 rounded-[2rem] border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all duration-500 shadow-sm hover:shadow-2xl"
-              >
-                <div className="flex justify-between items-start mb-8">
+              <TiltCard className="bg-white/80 dark:bg-[#111]/80 p-10 rounded-[2rem] border border-black/5 dark:border-white/5 group hover:border-[#3B82F6]/30 transition-all duration-500 shadow-sm hover:shadow-2xl">
+                <div className="flex justify-between items-start mb-8" style={{ transform: 'translateZ(20px)' }}>
                   <div className="text-[#1d1d1f] dark:text-white transition-colors group-hover:text-[#3B82F6] group-hover:scale-110 duration-500">
                     {service.icon}
                   </div>
@@ -1048,9 +1032,11 @@ const ServicesSection = () => {
                     {service.id}
                   </span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-4 tracking-tight">{service.title}</h3>
-                <p className="text-[#86868b] dark:text-gray-400/70 font-light leading-relaxed">{service.desc}</p>
-              </motion.div>
+                <div style={{ transform: 'translateZ(10px)' }}>
+                  <h3 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-4 tracking-tight">{service.title}</h3>
+                  <p className="text-[#86868b] dark:text-gray-400/70 font-light leading-relaxed">{service.desc}</p>
+                </div>
+              </TiltCard>
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -1113,7 +1099,7 @@ const GithubContributionGraph = () => {
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white mb-4">
               <Code className="inline-block mr-3 text-blue-500" size={40} />
-              <Typewriter text={t.contact?.openSourceTitle || "Open Source & Activity"} />
+              {t.contact?.openSourceTitle || "Open Source & Activity"}
             </h2>
             <p className="text-lg text-[#86868b] dark:text-gray-400 font-light">
               Mening GitHub faolligim va ochiq manbali loyihalardagi hissalarim tarixi. Hozirgi kunda <strong className="text-blue-500">{total}</strong> ta hissa qo'shdim.
@@ -1199,7 +1185,7 @@ const WorkflowSection = () => {
         <div className="mb-16">
             <TextReveal>
               <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
-                <Typewriter text={t.workflow.title} />
+                {t.workflow.title}
               </h2>
             </TextReveal>
             <p className="text-xl text-[#86868b] dark:text-gray-400 max-w-2xl font-light">{t.workflow.subtitle}</p>
@@ -1258,8 +1244,8 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
             <TextReveal>
-              <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
-                <Typewriter text={t.projects.title} />
+              <h2 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
+                {t.projects.title}
               </h2>
             </TextReveal>
             <p className="text-xl text-[#86868b] dark:text-gray-400 max-w-2xl font-light">{t.projects.subtitle}</p>
@@ -1306,51 +1292,53 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                   key={project.id}
-                  className="bg-white/70 dark:bg-black/30 rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm group h-full flex flex-col relative overflow-hidden hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5"
+                  className="relative group h-full flex flex-col"
                 >
-                  {/* Floating Tag */}
-                  <div className="absolute top-6 right-6 z-20 bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold text-[10px] shadow-lg uppercase tracking-wider">
-                    {project.tag}
-                  </div>
-
-                  <div className="relative rounded-[1.5rem] overflow-hidden aspect-video mb-6 shadow-xl">
-                    <img 
-                      src={project.image} 
-                      alt={project.title} 
-                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${project.videoUrl ? 'group-hover:opacity-0' : ''}`}
-                      referrerPolicy="no-referrer"
-                    />
-                    {project.videoUrl && (
-                      <video
-                        src={project.videoUrl}
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        muted
-                        loop
-                        playsInline
-                        onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
-                        onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
-                  </div>
-                  
-                  <div className="flex-1 flex flex-col">
-                    <h3 className="text-2xl font-display font-bold text-[#1d1d1f] dark:text-white mb-3 tracking-tight">{project.title}</h3>
-                    <p className="text-sm text-[#86868b] dark:text-gray-400 mb-6 leading-relaxed font-light line-clamp-3">{project.desc}</p>
-                    
-                    <div className="mt-auto flex flex-wrap items-center gap-3">
-                      {project.link && (
-                        <a href={project.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white bg-[#3B82F6] px-5 py-2.5 rounded-full transition-all shadow-lg hover:shadow-blue-500/40 hover:-translate-y-1">
-                          {t.projects.viewProject} <ArrowUpRight size={12} />
-                        </a>
-                      )}
-                      {project.githubUrl && (
-                        <a href={project.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/20 px-5 py-2.5 rounded-full transition-all hover:bg-black/5 dark:hover:bg-white/5 hover:-translate-y-1">
-                          <Github size={12} /> {lang === 'UZ' ? "Kod" : lang === 'RU' ? "Код" : "Code"}
-                        </a>
-                      )}
+                  <TiltCard className="bg-white/70 dark:bg-black/30 rounded-[2rem] md:rounded-[2.5rem] p-6 border border-black/5 dark:border-white/10 shadow-sm flex flex-col hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5">
+                    {/* Floating Tag */}
+                    <div className="absolute top-6 right-6 z-20 bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold text-[10px] shadow-lg uppercase tracking-wider" style={{ transform: 'translateZ(30px)' }}>
+                      {project.tag}
                     </div>
-                  </div>
+
+                    <div className="relative rounded-[1.5rem] overflow-hidden aspect-video mb-6 shadow-xl" style={{ transform: 'translateZ(20px)' }}>
+                      <img 
+                        src={project.image} 
+                        alt={project.title} 
+                        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${project.videoUrl ? 'group-hover:opacity-0' : ''}`}
+                        referrerPolicy="no-referrer"
+                      />
+                      {project.videoUrl && (
+                        <video
+                          src={project.videoUrl}
+                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          muted
+                          loop
+                          playsInline
+                          onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                          onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
+                    </div>
+                    
+                    <div className="flex-1 flex flex-col" style={{ transform: 'translateZ(10px)' }}>
+                      <h3 className="text-2xl font-display font-bold text-[#1d1d1f] dark:text-white mb-3 tracking-tight">{project.title}</h3>
+                      <p className="text-sm text-[#86868b] dark:text-gray-400 mb-6 leading-relaxed font-light line-clamp-3">{project.desc}</p>
+                      
+                      <div className="mt-auto flex flex-wrap items-center gap-3">
+                        {project.link && (
+                          <a href={project.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white bg-[#3B82F6] px-5 py-2.5 rounded-full transition-all shadow-lg hover:shadow-blue-500/40 hover:-translate-y-1">
+                            {t.projects.viewProject} <ArrowUpRight size={12} />
+                          </a>
+                        )}
+                        {project.githubUrl && (
+                          <a href={project.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/20 px-5 py-2.5 rounded-full transition-all hover:bg-black/5 dark:hover:bg-white/5 hover:-translate-y-1">
+                            <Github size={12} /> {lang === 'UZ' ? "Kod" : lang === 'RU' ? "Код" : "Code"}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </TiltCard>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -1369,7 +1357,7 @@ const TestimonialsSection = () => {
         <div className="mb-16">
           <TextReveal>
             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-4">
-              <Typewriter text={t.testimonials.title} />
+              {t.testimonials.title}
             </h2>
           </TextReveal>
           <p className="text-xl text-[#86868b] dark:text-gray-400 max-w-2xl font-light">{t.testimonials.subtitle}</p>
@@ -1427,7 +1415,7 @@ const ExperienceEducation = () => {
         <div>
           <TextReveal>
             <h2 className="text-4xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-12 flex items-center gap-4">
-              <Briefcase size={32} /> <Typewriter text={t.experience.title} />
+              <Briefcase size={32} /> {t.experience.title}
             </h2>
           </TextReveal>
           {experiences.length === 0 ? (
@@ -1458,7 +1446,7 @@ const ExperienceEducation = () => {
         <div>
           <TextReveal>
             <h2 className="text-4xl font-display font-bold tracking-tighter text-[#1d1d1f] dark:text-white uppercase mb-12 flex items-center gap-4">
-              <GraduationCap size={32} /> <Typewriter text={t.experience.education} />
+              <GraduationCap size={32} /> {t.experience.education}
             </h2>
           </TextReveal>
           {education.length === 0 ? (
@@ -1579,7 +1567,7 @@ const Contact = ({ settings }: { settings: any }) => {
         >
           <TextReveal>
             <h2 className="text-5xl md:text-8xl font-display font-bold tracking-tighter uppercase mb-8 leading-[1.05]">
-              <Typewriter text={t.contact?.letstalk1 || "Keling,"} /> <br/> <Typewriter text={t.contact?.letstalk2 || "gaplashamiz."} delay={0.3} />
+              {t.contact?.letstalk1 || "Keling,"} <br/> {t.contact?.letstalk2 || "gaplashamiz."}
             </h2>
           </TextReveal>
           <p className="text-xl text-gray-400 mb-12 font-light max-w-md">

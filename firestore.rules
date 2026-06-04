@@ -8,9 +8,11 @@ service cloud.firestore {
     
     function isAdmin() {
       return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
-         request.auth.token.email == "sanjarbekotabekov010@gmail.com" ||
-         request.auth.token.email == "");
+        ( 
+          request.auth.token.email == "sanjarbekotabekov010@gmail.com" ||
+          request.auth.token.email == "sanjarbektest111@gmail.com" ||
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+        );
     }
 
     // Hamma o'qiy oladigan, lekin faqat admin o'zgartira oladigan bo'limlar
