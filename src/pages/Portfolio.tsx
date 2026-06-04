@@ -16,6 +16,7 @@ import { TiltCard } from '../components/TiltCard';
 
 
 
+
 const StaggerContainer = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
   return (
     <motion.div
@@ -1113,10 +1114,13 @@ const GithubContributionGraph = () => {
         
         <div className="bg-white dark:bg-[#0d1117] p-8 rounded-[2rem] border border-black/5 dark:border-white/10 shadow-lg overflow-x-auto custom-scrollbar relative">
           {loading && (
-             <div className="absolute inset-0 z-10 bg-white/80 dark:bg-[#0d1117]/80 flex items-center justify-center rounded-[2rem]">
+             <div className="absolute inset-0 z-10 bg-white/80 dark:bg-[#0d1117]/80 flex items-center justify-center rounded-[2rem] backdrop-blur-sm">
                 <div className="flex flex-col items-center gap-3">
-                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                   <span className="text-sm font-medium text-gray-500">Faollik yuklanmoqda...</span>
+                   <div className="relative">
+                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center text-white text-xl font-display font-black shadow-lg">S</div>
+                     <div className="absolute -inset-1.5 border-[2px] border-transparent border-t-blue-500 border-r-cyan-400 rounded-2xl animate-[spin_1.5s_linear_infinite]" />
+                   </div>
+                   <span className="text-xs font-semibold text-gray-500 tracking-widest uppercase">Yuklanmoqda</span>
                 </div>
              </div>
           )}
@@ -1275,7 +1279,13 @@ const ProjectsSection = ({ settings }: { settings: any }) => {
       </div>
 
       {loading ? (
-        <div className="text-center text-gray-500 py-20">{lang === 'UZ' ? "Yuklanmoqda..." : lang === 'RU' ? "Загрузка..." : "Loading..."}</div>
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="relative">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center text-white text-2xl font-display font-black shadow-[0_0_20px_rgba(59,130,246,0.3)] animate-pulse">S</div>
+            <div className="absolute -inset-2 border-[2px] border-transparent border-t-blue-500 border-r-cyan-400 rounded-3xl animate-[spin_1.5s_linear_infinite]" />
+          </div>
+          <p className="mt-4 text-sm font-semibold text-gray-500 tracking-widest uppercase">{lang === 'UZ' ? "Yuklanmoqda..." : lang === 'RU' ? "Загрузка..." : "Loading..."}</p>
+        </div>
       ) : projects.length === 0 ? (
         <div className="text-center text-gray-500 py-20 border border-dashed border-gray-300 dark:border-gray-800 rounded-3xl mx-12">
           {t.projects.noProjects}

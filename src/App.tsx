@@ -3,25 +3,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { AnimatePresence } from 'motion/react';
 import { LanguageProvider } from './lib/LanguageContext';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
 import { CustomCursor } from './components/CustomCursor';
+import { InitialLoader } from './components/InitialLoader';
 
 const Portfolio = lazy(() => import('./pages/Portfolio'));
 const Login = lazy(() => import('./pages/Login'));
 const Admin = lazy(() => import('./pages/Admin'));
 const CVBuilder = lazy(() => import('./pages/CVBuilder'));
 
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-[#f4f7fe] dark:bg-[#050505]">
-    <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-  </div>
-);
-
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // 1200ms ensures it's shown cleanly even on fast loading
+    const timer = setTimeout(() => setShowSplash(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <LanguageProvider>
       <CustomCursor />
@@ -50,7 +54,10 @@ export default function App() {
             }
           }}
         />
-        <Suspense fallback={<LoadingFallback />}>
+        <AnimatePresence>
+          {showSplash && <InitialLoader />}
+        </AnimatePresence>
+        <Suspense fallback={<div className="min-h-screen bg-[#f4f7fe] dark:bg-[#050505]" />}>
           <Routes>
             <Route path="/" element={<Portfolio />} />
             <Route path="/login" element={<Login />} />
