@@ -504,7 +504,7 @@ const Hero = ({ settings }: { settings: any }) => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/sanjarbek/800/800';
+                      (e.target as HTMLImageElement).src = '';
                     }}
                   />
                 ) : (
