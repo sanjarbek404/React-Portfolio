@@ -7,12 +7,11 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return isAuthenticated() && 
-        ( 
-          request.auth.token.email == "sanjarbekotabekov010@gmail.com" ||
-          request.auth.token.email == "sanjarbektest111@gmail.com" ||
-          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
-        );
+      return isAuthenticated() && (
+        request.auth.token.email == "sanjarbekotabekov010@gmail.com" ||
+        request.auth.token.email == "sanjarbektest111@gmail.com" ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
     }
 
     // Hamma o'qiy oladigan, lekin faqat admin o'zgartira oladigan bo'limlar
@@ -30,12 +29,12 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
-    // Mehmonlar kitobi: Hamma o'qiydi va yoza oladi, faqat admin o'chiradi
+    // Mehmonlar kitobi: Hamma o'qiydi, kirganlar yoza oladi, admin va o'zi o'chiradi
     match /guestbook/{messageId} {
       allow read: if true;
-      allow create: if true;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update: if false;
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
     }
 
     // Analitika va Reaksiyalar: Hamma yozishi mumkin

@@ -423,7 +423,7 @@ const Hero = ({ settings }: { settings: any }) => {
               <StaggerItem>
                 <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] leading-[0.95] font-display font-black tracking-tighter text-[#1d1d1f] dark:text-white mb-6 relative">
                   <TextReveal delay={0.1}>Sanjarbek</TextReveal>
-                  <TextReveal delay={0.3} className="text-transparent bg-clip-text bg-[linear-gradient(110deg,#3b82f6,45%,#06b6d4,55%,#3b82f6)] bg-[length:200%_auto] animate-shimmer">Otabekov.</TextReveal>
+                  <TextReveal delay={0.3} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500">Otabekov.</TextReveal>
                 </h1>
               </StaggerItem>
               
@@ -491,8 +491,8 @@ const Hero = ({ settings }: { settings: any }) => {
             className="flex-shrink-0 relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] xl:w-[480px] xl:h-[480px] mt-12 lg:mt-0"
           >
             {/* Background elements */}
-            <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-blue-500/40 via-cyan-400/20 to-purple-500/40 rounded-[3rem] blur-[60px] transform -rotate-6 animate-pulse" style={{ animationDuration: '4s' }}></div>
-            <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-cyan-400/40 to-blue-500/40 rounded-full blur-[80px]"></div>
+            <div className="hidden md:block absolute -inset-4 bg-gradient-to-tr from-blue-500/20 via-cyan-400/10 to-purple-500/20 rounded-[3rem] blur-2xl transform -rotate-3 transition-transform duration-700 group-hover:rotate-0"></div>
+            <div className="hidden md:block absolute -inset-2 bg-gradient-to-tr from-cyan-400/20 to-blue-500/20 rounded-full blur-xl"></div>
             
             {/* Main Image Card */}
             <div className="relative w-full h-full rounded-[3rem] border border-white/40 dark:border-white/10 shadow-2xl bg-white/10 dark:bg-white/5 p-3 group">
