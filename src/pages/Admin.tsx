@@ -1748,7 +1748,7 @@ const SettingsManager = () => {
             </div>
             <div>
               <label className="block text-sm font-bold text-[#1d1d1f] dark:text-gray-300 mb-2 uppercase tracking-wider">Tajriba yillari</label>
-              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="1+" />
+              <input type="text" value={socials.expYears} onChange={e => setSocials({...socials, expYears: e.target.value})} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1d1d1f] dark:text-white font-medium" placeholder="3+" />
             </div>
           </form>
 
@@ -2081,9 +2081,20 @@ const SessionsManager = () => {
   useEffect(() => {
     if (!isFirebaseConfigured || !db) return;
 
-    const q = query(collection(db, 'sessions'), orderBy('lastActive', 'desc'));
+    const q = query(collection(db, 'sessions'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setSessions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      // Sort in memory to avoid missing index error
+      const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      docs.sort((a: any, b: any) => {
+        const timeA = a.lastActive?.seconds || 0;
+        const timeB = b.lastActive?.seconds || 0;
+        return timeB - timeA;
+      });
+      setSessions(docs);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching sessions: ", error);
+      toast.error("Seanslarni yuklashda xatolik yuz berdi");
       setLoading(false);
     });
 

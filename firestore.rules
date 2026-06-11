@@ -55,5 +55,11 @@ service cloud.firestore {
       allow create: if isAuthenticated() && (request.auth.uid == userId);
       allow update: if isAdmin();
     }
+
+    // Seanslar
+    match /sessions/{sessionId} {
+      allow read, delete: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create, update: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
   }
 }
